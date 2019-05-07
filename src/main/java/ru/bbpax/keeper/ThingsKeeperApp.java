@@ -29,12 +29,23 @@ public class ThingsKeeperApp {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(ThingsKeeperApp.class);
         testCreate(context);
+        try {
+            Thread.sleep(3000L);
+        } catch (InterruptedException e) {
+            log.info("sorry");
+        }
         testDelete(context);
     }
 
     private static void testDelete(ConfigurableApplicationContext context) {
         NoteRepo noteRepo = context.getBean(NoteRepo.class);
         TagRepo tagRepo = context.getBean(TagRepo.class);
+//        tagRepo.findById("5cd157fb3adf4e052ec0008b")
+//                .ifPresent(tagRepo::delete);
+        tagRepo.findAll()
+                .stream()
+                .findFirst()
+                .ifPresent(tagRepo::delete);
     }
 
     private static void testCreate(ConfigurableApplicationContext context) {
