@@ -1,8 +1,9 @@
 package ru.bbpax.keeper.model;
 
+import com.querydsl.core.annotations.QueryEmbedded;
+import com.querydsl.core.annotations.QueryEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,11 +18,14 @@ import static ru.bbpax.keeper.model.NoteTypes.RECIPE;
 @ToString(callSuper = true)
 @Document(collection = "notes")
 @TypeAlias(RECIPE)
-@NoArgsConstructor
+@QueryEntity
 public class Recipe extends AbstractNote {
 
+    @QueryEmbedded
     private Image image;
+    @QueryEmbedded
     private List<Step> steps;
+    @QueryEmbedded
     private List<Ingredient> ingredients;
     private String link;
 
@@ -35,5 +39,9 @@ public class Recipe extends AbstractNote {
 
     public Recipe(String title, LocalDateTime created, String description, List<Tag> tags) {
         super(RECIPE, title, created, description, tags);
+    }
+
+    public Recipe() {
+        super(RECIPE);
     }
 }

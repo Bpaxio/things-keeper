@@ -1,5 +1,7 @@
 package ru.bbpax.keeper.model;
 
+import com.querydsl.core.annotations.QueryEmbeddable;
+import com.querydsl.core.annotations.QueryEmbedded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bson.types.ObjectId;
@@ -8,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @AllArgsConstructor
+@QueryEmbeddable
 public class Step {
     @Id
     @Field("_id")
@@ -15,6 +18,7 @@ public class Step {
     private String title;
     private int stepNumber;
     private String description;
+    @QueryEmbedded
     private Image image;
 
     public Step(String title, int stepNumber, String description, Image image) {

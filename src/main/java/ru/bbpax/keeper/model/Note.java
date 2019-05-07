@@ -1,6 +1,7 @@
 package ru.bbpax.keeper.model;
 
-import lombok.AllArgsConstructor;
+
+import com.querydsl.core.annotations.QueryEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -17,8 +18,12 @@ import static ru.bbpax.keeper.model.NoteTypes.NOTE;
 @ToString(callSuper = true)
 @Document(collection = "notes")
 @TypeAlias(NOTE)
-@AllArgsConstructor
+@QueryEntity
 public class Note extends AbstractNote {
+
+    public Note() {
+        super(NOTE);
+    }
 
     public Note(String title, LocalDateTime created, String description, List<Tag> tags) {
         super(NOTE, title, created, description, tags);

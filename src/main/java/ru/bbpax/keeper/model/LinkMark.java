@@ -1,8 +1,8 @@
 package ru.bbpax.keeper.model;
 
+import com.querydsl.core.annotations.QueryEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,7 +17,7 @@ import static ru.bbpax.keeper.model.NoteTypes.LINK_MARK;
 @ToString(callSuper = true)
 @Document(collection = "notes")
 @TypeAlias(LINK_MARK)
-@NoArgsConstructor
+@QueryEntity
 public class LinkMark extends AbstractNote {
     private String link;
 
@@ -28,5 +28,9 @@ public class LinkMark extends AbstractNote {
 
     public LinkMark(String title, LocalDateTime created, String description, List<Tag> tags) {
         super(LINK_MARK, title, created, description, tags);
+    }
+
+    public LinkMark() {
+        super(LINK_MARK);
     }
 }
