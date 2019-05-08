@@ -38,7 +38,7 @@ public class Recipe extends AbstractNote {
     }
 
     public Recipe(String title, LocalDateTime created, String description, List<Tag> tags) {
-        super(RECIPE, title, created, description, tags);
+        super(title, created, description, tags, RECIPE);
     }
 
     public Recipe() {

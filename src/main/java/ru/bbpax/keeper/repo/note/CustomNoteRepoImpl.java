@@ -1,9 +1,9 @@
-package ru.bbpax.keeper.repo;
+package ru.bbpax.keeper.repo.note;
 
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
-import ru.bbpax.keeper.model.AbstractNote;
+import ru.bbpax.keeper.model.Note;
 import ru.bbpax.keeper.model.Tag;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class CustomNoteRepoImpl extends QuerydslRepositorySupport implements Cus
     }
 
     @Override
-    public List<? extends AbstractNote> findAllByTagId(String tagId) {
+    public List<Note> findAllByTagId(String tagId) {
         return from(note)
                 .where(note.tags.contains(findTag(tagId)))
                 .fetch();

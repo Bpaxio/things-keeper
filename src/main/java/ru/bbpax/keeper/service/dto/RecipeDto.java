@@ -1,31 +1,34 @@
 package ru.bbpax.keeper.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
+import ru.bbpax.keeper.model.Image;
+import ru.bbpax.keeper.model.Ingredient;
+import ru.bbpax.keeper.model.Step;
 import ru.bbpax.keeper.model.Tag;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-public class NoteDto {
+public class RecipeDto {
     private String id;
     @NonNull
     @JsonIgnore
     private NoteInfo info;
+    private Image image;
+    @NonNull
+    private List<Step> steps;
+    @NonNull
+    private List<Ingredient> ingredients;
+    private String link;
 
-    public NoteDto() {
+    public RecipeDto() {
         this.info = new NoteInfo();
     }
 
-    public NoteDto(@NonNull String title, LocalDateTime created, @NonNull String description, List<Tag> tags) {
-        this.info = new NoteInfo(title, created, description, tags);
-    }
-
-    public NoteDto setId(String id) {
+    public RecipeDto setId(String id) {
         this.id = id;
         return this;
     }
@@ -34,7 +37,7 @@ public class NoteDto {
         return id;
     }
 
-    public NoteDto setTitle(@NonNull String title) {
+    public RecipeDto setTitle(@NonNull String title) {
         this.info.setTitle(title);
         return this;
     }
@@ -43,7 +46,7 @@ public class NoteDto {
         return info.getTitle();
     }
 
-    public NoteDto setCreated(LocalDateTime created) {
+    public RecipeDto setCreated(LocalDateTime created) {
         this.info.setCreated(created);
         return this;
     }
@@ -52,7 +55,7 @@ public class NoteDto {
         return info.getCreated();
     }
 
-    public NoteDto setDescription(@NonNull String description) {
+    public RecipeDto setDescription(@NonNull String description) {
         this.info.setDescription(description);
         return this;
     }
@@ -61,7 +64,7 @@ public class NoteDto {
         return info.getDescription();
     }
 
-    public NoteDto setTags(List<Tag> tags) {
+    public RecipeDto setTags(List<Tag> tags) {
         this.info.setTags(tags);
         return this;
     }
@@ -69,5 +72,4 @@ public class NoteDto {
     public List<Tag> getTags() {
         return info.getTags();
     }
-
 }

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.bbpax.keeper.model.LinkMark;
 import ru.bbpax.keeper.service.LinkMarkService;
+import ru.bbpax.keeper.service.dto.LinkMarkDto;
 
 import java.util.List;
 
@@ -27,35 +27,35 @@ public class LinkMarkController {
     private final LinkMarkService service;
 
     @PostMapping
-    @ApiOperation(value = "create")
-    public LinkMark create(@RequestBody LinkMark linkMarkDto) {
-        return service.create(linkMarkDto);
+    @ApiOperation("create")
+    public LinkMarkDto create(@RequestBody LinkMarkDto dto) {
+        return service.create(dto);
     }
 
     @PutMapping
-    @ApiOperation(value = "update")
-    public LinkMark update(@RequestBody LinkMark linkMarkDto) {
-        return service.update(linkMarkDto);
+    @ApiOperation("update")
+    public LinkMarkDto update(@RequestBody LinkMarkDto dto) {
+        return service.update(dto);
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    @ApiOperation(value = "get")
-    public LinkMark get(@PathVariable String id) {
+    @ApiOperation("get")
+    public LinkMarkDto get(@PathVariable String id) {
         return service.getById(id);
     }
 
     @GetMapping
     @ResponseBody
     // TODO: 2019-05-07 add filters as query params
-    @ApiOperation(value = "getAll")
-    public List<LinkMark> getAll() {
+    @ApiOperation("getAll")
+    public List<LinkMarkDto> getAll() {
         return service.getAll();
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "deleteById")
+    @ApiOperation("deleteById")
     public void deleteById(@PathVariable String id) {
         service.deleteById(id);
     }

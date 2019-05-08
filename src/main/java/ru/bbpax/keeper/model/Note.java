@@ -26,6 +26,10 @@ public class Note extends AbstractNote {
     }
 
     public Note(String title, LocalDateTime created, String description, List<Tag> tags) {
-        super(NOTE, title, created, description, tags);
+        super(title, created, description, tags, NOTE);
+    }
+
+    public Note(String id, String title, LocalDateTime created, String description, List<Tag> tags) {
+        super(id, title, created, description, tags, NOTE);
     }
 }

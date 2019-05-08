@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.bbpax.keeper.model.Recipe;
 import ru.bbpax.keeper.service.RecipeService;
+import ru.bbpax.keeper.service.dto.RecipeDto;
 
 import java.util.List;
 
@@ -27,35 +27,35 @@ public class RecipeController {
     private final RecipeService service;
 
     @PostMapping
-    @ApiOperation(value = "create")
-    public Recipe create(@RequestBody Recipe recipeDto) {
-        return service.create(recipeDto);
+    @ApiOperation("create")
+    public RecipeDto create(@RequestBody RecipeDto dto) {
+        return service.create(dto);
     }
 
     @PutMapping
-    @ApiOperation(value = "update")
-    public Recipe update(@RequestBody Recipe recipeDto) {
-        return service.update(recipeDto);
+    @ApiOperation("update")
+    public RecipeDto update(@RequestBody RecipeDto dto) {
+        return service.update(dto);
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    @ApiOperation(value = "get")
-    public Recipe get(@PathVariable String id) {
+    @ApiOperation("get")
+    public RecipeDto get(@PathVariable String id) {
         return service.getById(id);
     }
 
     @GetMapping
     @ResponseBody
     // TODO: 2019-05-07 add filters as query params
-    @ApiOperation(value = "getAll")
-    public List<Recipe> getAll() {
+    @ApiOperation("getAll")
+    public List<RecipeDto> getAll() {
         return service.getAll();
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "deleteById")
+    @ApiOperation("deleteById")
     public void deleteById(@PathVariable String id) {
         service.deleteById(id);
     }

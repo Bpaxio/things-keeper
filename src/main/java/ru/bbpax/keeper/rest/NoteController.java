@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.bbpax.keeper.model.Note;
 import ru.bbpax.keeper.service.NoteService;
+import ru.bbpax.keeper.service.dto.NoteDto;
 
 import java.util.List;
 
@@ -27,35 +27,35 @@ public class NoteController {
     private final NoteService service;
 
     @PostMapping
-    @ApiOperation(value = "create")
-    public Note create(@RequestBody Note noteDto) {
+    @ApiOperation("create")
+    public NoteDto create(@RequestBody NoteDto noteDto) {
         return service.create(noteDto);
     }
 
     @PutMapping
-    @ApiOperation(value = "update")
-    public Note update(@RequestBody Note noteDto) {
+    @ApiOperation("update")
+    public NoteDto update(@RequestBody NoteDto noteDto) {
         return service.update(noteDto);
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    @ApiOperation(value = "get")
-    public Note get(@PathVariable String id) {
+    @ApiOperation("get")
+    public NoteDto get(@PathVariable String id) {
         return service.getById(id);
     }
 
     @GetMapping
     @ResponseBody
     // TODO: 2019-05-07 add filters as query params
-    @ApiOperation(value = "getAll")
-    public List<Note> getAll() {
+    @ApiOperation("getAll")
+    public List<NoteDto> getAll() {
         return service.getAll();
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "deleteById")
+    @ApiOperation("deleteById")
     public void deleteById(@PathVariable String id) {
         service.deleteById(id);
     }

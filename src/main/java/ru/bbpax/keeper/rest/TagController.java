@@ -27,34 +27,34 @@ public class TagController {
     private final TagService service;
 
     @PostMapping
-    @ApiOperation(value = "create")
+    @ApiOperation("create")
     public Tag createTag(@RequestBody Tag tagDto) {
         return service.create(tagDto);
     }
 
     @PutMapping
-    @ApiOperation(value = "update")
+    @ApiOperation("update")
     public Tag updateTag(@RequestBody Tag tagDto) {
         return service.update(tagDto);
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    @ApiOperation(value = "get")
+    @ApiOperation("get")
     public Tag getTag(@PathVariable String id) {
         return service.getById(id);
     }
 
     @GetMapping
     @ResponseBody
-    @ApiOperation(value = "getAll")
+    @ApiOperation("getAll")
     public List<Tag> getTags() {
         return service.getAll();
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "deleteById")
+    @ApiOperation("deleteById")
     public void deleteTagById(@PathVariable String id) {
         service.deleteById(id);
     }

@@ -1,9 +1,7 @@
 package ru.bbpax.keeper.model;
 
 
-import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEmbedded;
-import com.querydsl.core.annotations.QueryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -18,8 +16,6 @@ import java.util.List;
 @Data
 @Document(collection = "notes")
 @AllArgsConstructor
-@QueryEntity
-@QueryEmbeddable
 public abstract class AbstractNote {
 
     @Id
@@ -28,13 +24,12 @@ public abstract class AbstractNote {
     private String title;
     private LocalDateTime created;
     private String description;
-    private String noteType;
-
     @DBRef
     @QueryEmbedded
     private List<Tag> tags;
+    private String noteType;
 
-    public AbstractNote(String noteType, String title, LocalDateTime created, String description, List<Tag> tags) {
+    public AbstractNote(String title, LocalDateTime created, String description, List<Tag> tags, String noteType) {
         this(noteType);
         this.title = title;
         this.created = created;
@@ -43,10 +38,7 @@ public abstract class AbstractNote {
     }
 
     public AbstractNote(String noteType) {
-        this();
-        this.noteType = noteType;
-    }
-    public AbstractNote() {
         created = LocalDateTime.now();
+        this.noteType = noteType;
     }
 }

@@ -3,8 +3,8 @@ package ru.bbpax.keeper.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.bbpax.keeper.model.Tag;
-import ru.bbpax.keeper.repo.NoteRepo;
 import ru.bbpax.keeper.repo.TagRepo;
+import ru.bbpax.keeper.repo.note.NoteRepo;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 import ru.bbpax.keeper.service.exception.TagIsUsedException;
 
