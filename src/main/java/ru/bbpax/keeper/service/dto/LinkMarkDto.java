@@ -1,8 +1,12 @@
 package ru.bbpax.keeper.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NonNull;
+import ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDeserializer;
+import ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeSerializer;
 import ru.bbpax.keeper.model.Tag;
 
 import java.time.LocalDateTime;
@@ -39,11 +43,13 @@ public class LinkMarkDto {
         return info.getTitle();
     }
 
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     public LinkMarkDto setCreated(LocalDateTime created) {
         this.info.setCreated(created);
         return this;
     }
 
+    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     public LocalDateTime getCreated() {
         return info.getCreated();
     }

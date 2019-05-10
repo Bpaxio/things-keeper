@@ -1,11 +1,12 @@
 package ru.bbpax.keeper.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NonNull;
-import ru.bbpax.keeper.model.Image;
-import ru.bbpax.keeper.model.Ingredient;
-import ru.bbpax.keeper.model.Step;
+import ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDeserializer;
+import ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeSerializer;
 import ru.bbpax.keeper.model.Tag;
 
 import java.time.LocalDateTime;
@@ -17,11 +18,11 @@ public class RecipeDto {
     @NonNull
     @JsonIgnore
     private NoteInfo info;
-    private Image image;
+    private ImageDto image;
     @NonNull
-    private List<Step> steps;
+    private List<StepDto> steps;
     @NonNull
-    private List<Ingredient> ingredients;
+    private List<IngredientDto> ingredients;
     private String link;
 
     public RecipeDto() {
@@ -46,11 +47,13 @@ public class RecipeDto {
         return info.getTitle();
     }
 
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     public RecipeDto setCreated(LocalDateTime created) {
         this.info.setCreated(created);
         return this;
     }
 
+    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     public LocalDateTime getCreated() {
         return info.getCreated();
     }

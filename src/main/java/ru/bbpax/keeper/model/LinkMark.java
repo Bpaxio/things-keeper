@@ -26,6 +26,11 @@ public class LinkMark extends AbstractNote {
         this.link = link;
     }
 
+    public LinkMark(String id, String title, LocalDateTime created, String description, List<Tag> tags, String link) {
+        super(id, title, created, description, tags, LINK_MARK);
+        this.link = link;
+    }
+
     public LinkMark(String title, LocalDateTime created, String description, List<Tag> tags) {
         super(title, created, description, tags, LINK_MARK);
     }

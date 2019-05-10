@@ -41,12 +41,16 @@ public class TagService {
     }
 
     public void deleteById(String id) {
-        if (tagIsUsed(id)) throw new TagIsUsedException();
+        if (tagIsUsed(id)) {
+            throw new TagIsUsedException();
+        }
         repo.deleteById(id);
     }
 
     private Tag createIfMissing(Tag tag) {
-        if (tag.getId() == null) return create(tag);
+        if (tag.getId() == null) {
+            return create(tag);
+        }
         return tag;
     }
 

@@ -20,7 +20,7 @@ import ru.bbpax.keeper.service.dto.NoteDto;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/note")
+@RequestMapping("api/v1/notes")
 @AllArgsConstructor
 @Api(value="NotesRest", description = "Note REST API")
 public class NoteController {

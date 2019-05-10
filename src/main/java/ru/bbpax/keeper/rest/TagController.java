@@ -20,7 +20,7 @@ import ru.bbpax.keeper.service.TagService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/tag")
+@RequestMapping("api/v1/tags")
 @AllArgsConstructor
 @Api(value="TagsRest", description = "Tag REST API")
 public class TagController {
@@ -28,14 +28,14 @@ public class TagController {
 
     @PostMapping
     @ApiOperation("create")
-    public Tag createTag(@RequestBody Tag tagDto) {
-        return service.create(tagDto);
+    public Tag createTag(@RequestBody Tag tag) {
+        return service.create(tag);
     }
 
     @PutMapping
     @ApiOperation("update")
-    public Tag updateTag(@RequestBody Tag tagDto) {
-        return service.update(tagDto);
+    public Tag updateTag(@RequestBody Tag tag) {
+        return service.update(tag);
     }
 
     @GetMapping("{id}")
