@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      database: test-keeper
+      port: 27017
+      host: localhost
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
