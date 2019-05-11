@@ -1,0 +1,161 @@
+package ru.bbpax.keeper.service;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.bbpax.keeper.model.Tag;
+import ru.bbpax.keeper.repo.TagRepo;
+import ru.bbpax.keeper.repo.note.NoteRepo;
+import ru.bbpax.keeper.service.exception.NotFoundException;
+import ru.bbpax.keeper.service.exception.TagIsUsedException;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static ru.bbpax.keeper.util.EntityUtil.note;
+import static ru.bbpax.keeper.util.EntityUtil.tag;
+
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+class TagServiceTest {
+    @Configuration
+    @Import({ TagService.class })
+    static class Config {
+
+    }
+    @MockBean
+    private TagRepo repo;
+    @MockBean
+    private NoteRepo noteRepo;
+
+    @Autowired
+    private TagService service;
+
+    @Test
+    void updateTags() {
+        List<Tag> list = Arrays.asList(
+                tag("old 1"),
+                new Tag("new 2"),
+                tag("old 3"),
+                new Tag("new 4")
+        );
+        doReturn(Optional.empty()).when(repo).findById(anyString());
+        doReturn(Optional.of(list.get(0))).when(repo).findById(list.get(0).getId());
+        doReturn(Optional.of(list.get(2))).when(repo).findById(list.get(2).getId());
+
+        doReturn(tag(list.get(1).getValue())).when(repo).save(list.get(1));
+        doReturn(tag(list.get(3).getValue())).when(repo).save(list.get(3));
+
+        final List<Tag> tags = service.updateTags(list);
+        assertThat(tags)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(list.size())
+                .contains(list.get(0), list.get(2));
+
+        assertEquals(list.get(1).getValue(), tags.get(1).getValue());
+        assertNotEquals(list.get(1).getId(), tags.get(1).getId());
+        assertEquals(list.get(3).getValue(), tags.get(3).getValue());
+        assertNotEquals(list.get(3).getId(), tags.get(3).getId());
+    }
+
+    @Test
+    void create() {
+        final Tag tagByName = new Tag("by name only");
+        final Tag tagByAll = tag("Name");
+
+        doReturn(tag(tagByName.getValue())).when(repo).save(tagByName);
+        doReturn(tag(tagByAll.getValue())).when(repo).save(tagByAll);
+
+        final Tag resultByName = service.create(tagByName);
+        assertNotNull(resultByName);
+        assertEquals(tagByName.getValue(), resultByName.getValue());
+        assertNotNull(resultByName.getId());
+
+        final Tag resultByAll = service.create(tagByAll);
+        assertNotNull(resultByAll);
+        assertEquals(tagByAll.getValue(), resultByAll.getValue());
+        assertNotEquals(tagByAll.getId(), resultByAll.getId());
+
+    }
+
+    @Test
+    void update() {
+        final Tag tagByName = new Tag("by name only");
+        final Tag tagByAll = tag("Name");
+
+        doReturn(tag(tagByName.getValue())).when(repo).save(tagByName);
+        doReturn(tagByAll).when(repo).save(tagByAll);
+
+        final Tag resultByName = service.update(tagByName);
+        assertNotNull(resultByName);
+        assertEquals(tagByName.getValue(), resultByName.getValue());
+        assertNotNull(resultByName.getId());
+
+        final Tag resultByAll = service.update(tagByAll);
+        assertNotNull(resultByAll);
+        assertEquals(tagByAll.getValue(), resultByAll.getValue());
+        assertEquals(tagByAll.getId(), resultByAll.getId());
+    }
+
+    @Test
+    void getById() {
+        final Tag tag = tag("Name");
+        doReturn(Optional.empty()).when(repo).findById(anyString());
+        doReturn(Optional.of(tag)).when(repo).findById(tag.getId());
+
+        final Tag byId = service.getById(tag.getId());
+        assertNotNull(byId);
+        assertEquals(tag.getValue(), byId.getValue());
+        assertEquals(tag.getId(), byId.getId());
+        assertEquals(tag, byId);
+        assertThrows(NotFoundException.class, () -> service.getById("WRONG_ID"));
+    }
+
+    @Test
+    void getAll() {
+        List<Tag> list = Arrays.asList(
+                tag("1"),
+                tag("2"),
+                tag("3"),
+                tag("4")
+        );
+        doReturn(list).when(repo).findAll();
+
+        final List<Tag> all = service.getAll();
+        assertNotNull(all);
+        assertEquals(list, all);
+    }
+
+    @Test
+    void deleteById() {
+        final Tag unusedTag = tag();
+        final Tag usedTag = tag("First");
+        doReturn(Collections.emptyList()).when(noteRepo).findAllByTagId(unusedTag.getId());
+        doReturn(Collections.singletonList(note())).when(noteRepo).findAllByTagId(usedTag.getId());
+
+        service.deleteById(unusedTag.getId());
+        assertThrows(TagIsUsedException.class, () -> service.deleteById(usedTag.getId()));
+
+        verify(noteRepo, times(1)).findAllByTagId(unusedTag.getId());
+        verify(noteRepo, times(1)).findAllByTagId(usedTag.getId());
+        verify(repo, times(1)).deleteById(unusedTag.getId());
+        verify(repo, times(0)).deleteById(usedTag.getId());
+    }
+}

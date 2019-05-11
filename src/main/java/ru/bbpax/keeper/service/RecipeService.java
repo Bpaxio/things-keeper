@@ -13,8 +13,6 @@ import ru.bbpax.keeper.service.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.bbpax.keeper.model.NoteTypes.RECIPE;
-
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -52,7 +50,7 @@ public class RecipeService {
     }
 
     public List<RecipeDto> getAll() {
-        return repo.findAllByNoteType(RECIPE)
+        return repo.findAll()
                 .stream()
                 .map(recipe -> mapper.map(recipe, RecipeDto.class))
                 .collect(Collectors.toList());

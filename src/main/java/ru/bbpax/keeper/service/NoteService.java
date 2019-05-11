@@ -13,8 +13,6 @@ import ru.bbpax.keeper.service.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.bbpax.keeper.model.NoteTypes.NOTE;
-
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -26,8 +24,8 @@ public class NoteService {
 
     @Transactional
     public NoteDto create(final NoteDto dto) {
-        dto.setId(null);
-        Note note = mapper.map(dto, Note.class);
+        final Note note = mapper.map(dto, Note.class);
+        note.setId(null);
         log.info("create: {}", note);
         note.setTags(tagService.updateTags(note.getTags()));
         final NoteDto noteDto = mapper.map(repo.save(note), NoteDto.class);
@@ -49,7 +47,7 @@ public class NoteService {
     }
 
     public List<NoteDto> getAll() {
-        return repo.findAllByNoteType(NOTE)
+        return repo.findAll()
                 .stream()
                 .map(note -> mapper.map(note, NoteDto.class))
                 .collect(Collectors.toList());

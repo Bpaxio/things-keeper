@@ -13,8 +13,6 @@ import ru.bbpax.keeper.service.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.bbpax.keeper.model.NoteTypes.LINK_MARK;
-
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -49,7 +47,7 @@ public class LinkMarkService {
     }
 
     public List<LinkMarkDto> getAll() {
-        return repo.findAllByNoteType(LINK_MARK)
+        return repo.findAll()
                 .stream()
                 .map(linkMark -> mapper.map(linkMark, LinkMarkDto.class))
                 .collect(Collectors.toList());

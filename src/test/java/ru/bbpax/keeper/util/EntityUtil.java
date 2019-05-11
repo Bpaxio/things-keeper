@@ -29,7 +29,7 @@ public class EntityUtil {
     }
 
     public static Tag tag(String tagValue) {
-        return new Tag(new ObjectId().toHexString(),tagValue);
+        return new Tag(new ObjectId().toHexString(), tagValue);
     }
 
     public static NoteDto noteDto() {
