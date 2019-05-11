@@ -3,6 +3,7 @@ package ru.bbpax.keeper.repo.note;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 import ru.bbpax.keeper.model.Note;
 import ru.bbpax.keeper.model.Tag;
 
@@ -19,6 +20,7 @@ public class CustomNoteRepoImpl extends QuerydslRepositorySupport implements Cus
 
     @Override
     public List<Note> findAllByTagId(String tagId) {
+        Assert.notNull(tagId, "The given id must not be null!");
         return from(note)
                 .where(note.tags.contains(findTag(tagId)))
                 .fetch();

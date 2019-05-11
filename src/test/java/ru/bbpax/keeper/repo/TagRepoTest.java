@@ -11,9 +11,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.bbpax.keeper.model.LinkMark;
-import ru.bbpax.keeper.model.Note;
-import ru.bbpax.keeper.model.Recipe;
 import ru.bbpax.keeper.model.Tag;
 
 import java.util.Arrays;
@@ -21,9 +18,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static ru.bbpax.keeper.util.EntityUtil.linkMark;
-import static ru.bbpax.keeper.util.EntityUtil.note;
-import static ru.bbpax.keeper.util.EntityUtil.recipe;
 import static ru.bbpax.keeper.util.EntityUtil.tag;
 
 @Slf4j
@@ -40,25 +34,12 @@ class TagRepoTest {
     private TagRepo repo;
 
     @BeforeEach
-    void setUp(@Autowired MongoTemplate template) throws Exception {
+    void setUp(@Autowired MongoTemplate template) {
         tags.forEach(template::save);
-
-        final Note note = note();
-        note.setTags(tags);
-        final Recipe recipe = recipe();
-        recipe.setTags(tags);
-        final LinkMark linkMark = linkMark();
-        linkMark.setTags(tags);
-        template.save(note);
-        template.save(recipe);
-        template.save(linkMark);
-        log.info("tags: {}\nall: {}",
-                template.findAll(Tag.class),
-                template.findAll(Note.class));
     }
 
     @Test
-    void testCreate(@Autowired MongoTemplate template) throws Exception {
+    void testCreate(@Autowired MongoTemplate template) {
         int count = template.findAll(Tag.class, "tags").size();
         final Tag tag = repo.save(tag("test"));
         assertEquals(count + 1, template.findAll(Tag.class, "tags").size());
@@ -66,7 +47,7 @@ class TagRepoTest {
     }
 
     @Test
-    void testUpdate(@Autowired MongoTemplate template) throws Exception {
+    void testUpdate(@Autowired MongoTemplate template) {
         int count = template.findAll(Tag.class, "tags").size();
         final Tag tag = template.findById(tags.get(0).getId(), Tag.class);
         tag.setValue("nefeadf");
@@ -77,7 +58,7 @@ class TagRepoTest {
 
     @Test
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    void testFindById() throws Exception {
+    void testFindById() {
         assertNotNull(repo.findById(tags.get(0).getId()).get());
         assertEquals(tags.get(0), repo.findById(tags.get(0).getId()).get());
         assertNotNull(repo.findById(tags.get(1).getId()).get());
@@ -87,14 +68,14 @@ class TagRepoTest {
     }
 
     @Test
-    void testFindAll(@Autowired MongoTemplate template) throws Exception {
+    void testFindAll(@Autowired MongoTemplate template) {
         final List<Tag> all = repo.findAll();
         assertEquals(template.findAll(Tag.class, "tags").size(), all.size());
         assertEquals(template.findAll(Tag.class, "tags"), all);
     }
 
     @Test
-    void testDelete(@Autowired MongoTemplate template) throws Exception {
+    void testDelete(@Autowired MongoTemplate template) {
         int count = template.findAll(Tag.class, "tags").size();
         repo.deleteById(tags.get(0).getId());
         assertEquals(count - 1, template.findAll(Tag.class, "tags").size());

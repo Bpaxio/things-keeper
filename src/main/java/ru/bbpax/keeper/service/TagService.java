@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.bbpax.keeper.model.Tag;
 import ru.bbpax.keeper.repo.TagRepo;
-import ru.bbpax.keeper.repo.note.NoteRepo;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 import ru.bbpax.keeper.service.exception.TagIsUsedException;
 
@@ -15,7 +14,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TagService {
     private final TagRepo repo;
-    private final NoteRepo noteRepo;
 
     public List<Tag> updateTags(List<Tag> tags) {
         return tags.stream()
@@ -41,7 +39,8 @@ public class TagService {
     }
 
     public void deleteById(String id) {
-        if (tagIsUsed(id)) {
+        Tag tag = repo.findById(id).orElseThrow(NotFoundException::new);
+        if (repo.tagIsUsed(tag)) {
             throw new TagIsUsedException();
         }
         repo.deleteById(id);
@@ -52,9 +51,5 @@ public class TagService {
             return create(tag);
         }
         return tag;
-    }
-
-    private boolean tagIsUsed(String id) {
-        return noteRepo.findAllByTagId(id).stream().findFirst().isPresent();
     }
 }

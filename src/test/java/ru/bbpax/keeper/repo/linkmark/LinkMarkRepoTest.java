@@ -1,4 +1,4 @@
-package ru.bbpax.keeper.repo;
+package ru.bbpax.keeper.repo.linkmark;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,6 @@ import ru.bbpax.keeper.model.LinkMark;
 import ru.bbpax.keeper.model.Note;
 import ru.bbpax.keeper.model.Recipe;
 import ru.bbpax.keeper.model.Tag;
-import ru.bbpax.keeper.repo.linkmark.LinkMarkRepo;
 
 import java.util.Arrays;
 import java.util.List;
