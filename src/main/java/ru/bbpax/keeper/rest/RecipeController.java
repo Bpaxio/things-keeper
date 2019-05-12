@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.bbpax.keeper.rest.request.RecipeFilterRequest;
 import ru.bbpax.keeper.service.RecipeService;
-import ru.bbpax.keeper.service.dto.RecipeDto;
+import ru.bbpax.keeper.rest.dto.RecipeDto;
 
 import java.util.List;
 
@@ -49,8 +50,8 @@ public class RecipeController {
     @ResponseBody
     // TODO: 2019-05-07 add filters as query params
     @ApiOperation("getAll")
-    public List<RecipeDto> getAll() {
-        return service.getAll();
+    public List<RecipeDto> getAll(RecipeFilterRequest request) {
+        return service.getAll(request);
     }
 
     @DeleteMapping("{id}")

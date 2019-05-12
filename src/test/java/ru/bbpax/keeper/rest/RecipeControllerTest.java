@@ -14,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.bbpax.keeper.service.RecipeService;
-import ru.bbpax.keeper.service.dto.RecipeDto;
+import ru.bbpax.keeper.rest.dto.RecipeDto;
 
 import java.util.Collections;
 

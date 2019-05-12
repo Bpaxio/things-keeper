@@ -1,4 +1,4 @@
-package ru.bbpax.keeper.repo;
+package ru.bbpax.keeper.repo.tag;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.bbpax.keeper.model.Tag;
+import ru.bbpax.keeper.repo.tag.TagRepo;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.bbpax.keeper.repo;
+package ru.bbpax.keeper.repo.tag;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,9 @@ import ru.bbpax.keeper.model.Tag;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.bbpax.keeper.util.EntityUtil.linkMark;
 import static ru.bbpax.keeper.util.EntityUtil.note;
 import static ru.bbpax.keeper.util.EntityUtil.recipe;

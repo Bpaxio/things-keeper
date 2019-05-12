@@ -1,4 +1,4 @@
-package ru.bbpax.keeper.repo;
+package ru.bbpax.keeper.repo.tag;
 
 import org.springframework.stereotype.Repository;
 import ru.bbpax.keeper.model.Tag;

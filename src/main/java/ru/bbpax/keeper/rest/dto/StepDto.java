@@ -1,4 +1,4 @@
-package ru.bbpax.keeper.service.dto;
+package ru.bbpax.keeper.rest.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

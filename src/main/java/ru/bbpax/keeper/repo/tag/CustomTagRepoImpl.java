@@ -1,4 +1,4 @@
-package ru.bbpax.keeper.repo;
+package ru.bbpax.keeper.repo.tag;
 
 
 import org.springframework.data.mongodb.core.MongoOperations;

@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.bbpax.keeper.service.NoteService;
-import ru.bbpax.keeper.service.dto.NoteDto;
+import ru.bbpax.keeper.rest.dto.NoteDto;
 
 import java.util.Collections;
 

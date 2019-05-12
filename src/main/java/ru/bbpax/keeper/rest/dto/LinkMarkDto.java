@@ -1,11 +1,11 @@
-package ru.bbpax.keeper.service.dto;
+package ru.bbpax.keeper.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
+import org.springframework.format.annotation.DateTimeFormat;
 import ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDeserializer;
 import ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeSerializer;
 import ru.bbpax.keeper.model.Tag;
@@ -13,23 +13,22 @@ import ru.bbpax.keeper.model.Tag;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDeserializer.DATE_TIME_PATTERN;
+
 @Data
-@AllArgsConstructor
-public class NoteDto {
+public class LinkMarkDto {
     private String id;
     @NonNull
     @JsonIgnore
     private NoteInfo info;
+    @NonNull
+    private String link;
 
-    public NoteDto() {
+    public LinkMarkDto() {
         this.info = new NoteInfo();
     }
 
-    public NoteDto(@NonNull String title, LocalDateTime created, @NonNull String description, List<Tag> tags) {
-        this.info = new NoteInfo(title, created, description, tags);
-    }
-
-    public NoteDto setId(String id) {
+    public LinkMarkDto setId(String id) {
         this.id = id;
         return this;
     }
@@ -38,7 +37,7 @@ public class NoteDto {
         return id;
     }
 
-    public NoteDto setTitle(@NonNull String title) {
+    public LinkMarkDto setTitle(@NonNull String title) {
         this.info.setTitle(title);
         return this;
     }
@@ -47,8 +46,9 @@ public class NoteDto {
         return info.getTitle();
     }
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = DATE_TIME_PATTERN)
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
-    public NoteDto setCreated(LocalDateTime created) {
+    public LinkMarkDto setCreated(LocalDateTime created) {
         this.info.setCreated(created);
         return this;
     }
@@ -58,7 +58,7 @@ public class NoteDto {
         return info.getCreated();
     }
 
-    public NoteDto setDescription(@NonNull String description) {
+    public LinkMarkDto setDescription(@NonNull String description) {
         this.info.setDescription(description);
         return this;
     }
@@ -67,7 +67,7 @@ public class NoteDto {
         return info.getDescription();
     }
 
-    public NoteDto setTags(List<Tag> tags) {
+    public LinkMarkDto setTags(List<Tag> tags) {
         this.info.setTags(tags);
         return this;
     }
@@ -75,5 +75,4 @@ public class NoteDto {
     public List<Tag> getTags() {
         return info.getTags();
     }
-
 }

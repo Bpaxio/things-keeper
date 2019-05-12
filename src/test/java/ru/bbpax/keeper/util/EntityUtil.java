@@ -9,11 +9,11 @@ import ru.bbpax.keeper.model.Note;
 import ru.bbpax.keeper.model.Recipe;
 import ru.bbpax.keeper.model.Step;
 import ru.bbpax.keeper.model.Tag;
-import ru.bbpax.keeper.service.dto.IngredientDto;
-import ru.bbpax.keeper.service.dto.LinkMarkDto;
-import ru.bbpax.keeper.service.dto.NoteDto;
-import ru.bbpax.keeper.service.dto.RecipeDto;
-import ru.bbpax.keeper.service.dto.StepDto;
+import ru.bbpax.keeper.rest.dto.IngredientDto;
+import ru.bbpax.keeper.rest.dto.LinkMarkDto;
+import ru.bbpax.keeper.rest.dto.NoteDto;
+import ru.bbpax.keeper.rest.dto.RecipeDto;
+import ru.bbpax.keeper.rest.dto.StepDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.bbpax.keeper.rest.request.LinkMarkFilterRequest;
 import ru.bbpax.keeper.service.LinkMarkService;
-import ru.bbpax.keeper.service.dto.LinkMarkDto;
+import ru.bbpax.keeper.rest.dto.LinkMarkDto;
 
 import java.util.List;
 
@@ -49,8 +50,8 @@ public class LinkMarkController {
     @ResponseBody
     // TODO: 2019-05-07 add filters as query params
     @ApiOperation("getAll")
-    public List<LinkMarkDto> getAll() {
-        return service.getAll();
+    public List<LinkMarkDto> getAll(LinkMarkFilterRequest request) {
+        return service.getAll(request);
     }
 
     @DeleteMapping("{id}")

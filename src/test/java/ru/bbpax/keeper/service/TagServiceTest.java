@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.bbpax.keeper.model.Tag;
-import ru.bbpax.keeper.repo.TagRepo;
+import ru.bbpax.keeper.repo.tag.TagRepo;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 import ru.bbpax.keeper.service.exception.TagIsUsedException;
 
