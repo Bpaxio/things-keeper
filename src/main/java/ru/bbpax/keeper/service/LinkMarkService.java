@@ -57,7 +57,7 @@ public class LinkMarkService {
 
     public List<LinkMarkDto> getAll(LinkMarkFilterRequest request) {
         log.info("filterDTO: {}", request);
-        return repo.findAll(filterService.parseFilter(request))
+        return repo.findAll(filterService.makePredicate(request))
                 .stream()
                 .map(note -> mapper.map(note, LinkMarkDto.class))
                 .collect(Collectors.toList());

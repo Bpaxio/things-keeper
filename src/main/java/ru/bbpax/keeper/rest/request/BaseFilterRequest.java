@@ -12,8 +12,8 @@ import java.time.LocalDate;
 
 @Data
 public class BaseFilterRequest {
-    @ApiParam("String, that can be found in 'title' of the note")
-    private String title;
+    @ApiParam("Search in string-like fields of the note('title' by default)")
+    private String input;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonSerialize(using = CustomLocalDateSerializer.class)

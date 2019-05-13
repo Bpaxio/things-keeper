@@ -59,9 +59,8 @@ public class RecipeService {
     }
 
     public List<RecipeDto> getAll(RecipeFilterRequest request) {
-
         log.info("filterDTO: {}", request);
-        return repo.findAll(filterService.parseFilter(request))
+        return repo.findAll(filterService.makePredicate(request))
                 .stream()
                 .map(note -> mapper.map(note, RecipeDto.class))
                 .collect(Collectors.toList());

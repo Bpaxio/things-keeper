@@ -50,7 +50,7 @@ public class NoteService {
 
     public List<NoteDto> getAll(NoteFilterRequest request) {
         log.info("filterDTO: {}", request);
-        return repo.findAll(filterService.parseFilter(request))
+        return repo.findAll(filterService.makePredicate(request))
                 .stream()
                 .map(note -> mapper.map(note, NoteDto.class))
                 .collect(Collectors.toList());

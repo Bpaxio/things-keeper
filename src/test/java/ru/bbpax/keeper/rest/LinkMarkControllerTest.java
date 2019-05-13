@@ -95,7 +95,7 @@ class LinkMarkControllerTest {
                 .andExpect(jsonPath("$.description", is(linkMark.getDescription())))
                 .andExpect(jsonPath("$.tags", hasSize(3)))
                 .andExpect(jsonPath("$.created", is(linkMark.getCreated().toString())))
-                .andExpect(jsonPath("$.title", is(linkMark.getTitle())))
+                .andExpect(jsonPath("$.input", is(linkMark.getTitle())))
                 .andExpect(jsonPath("$.link", is(linkMark.getLink())))
                 .andExpect(jsonPath("$.id", is(linkMark.getId())));
 
@@ -117,7 +117,7 @@ class LinkMarkControllerTest {
                 .andExpect(jsonPath("$[0].description", is(linkMark.getDescription())))
                 .andExpect(jsonPath("$[0].tags", hasSize(3)))
                 .andExpect(jsonPath("$[0].created", is(linkMark.getCreated().toString())))
-                .andExpect(jsonPath("$[0].title", is(linkMark.getTitle())))
+                .andExpect(jsonPath("$[0].input", is(linkMark.getTitle())))
                 .andExpect(jsonPath("$[0].link", is(linkMark.getLink())))
                 .andExpect(jsonPath("$[0].id", is(linkMark.getId())));
 
