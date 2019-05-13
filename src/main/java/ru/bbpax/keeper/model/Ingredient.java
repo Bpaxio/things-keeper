@@ -3,13 +3,14 @@ package ru.bbpax.keeper.model;
 import com.querydsl.core.annotations.QueryEmbeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.bson.types.ObjectId;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.math.BigDecimal;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @QueryEmbeddable
 public class Ingredient {
@@ -25,9 +26,5 @@ public class Ingredient {
         this.name = name;
         this.value = value;
         this.unit = unit;
-    }
-
-    public Ingredient() {
-        this.id = new ObjectId().toHexString();
     }
 }

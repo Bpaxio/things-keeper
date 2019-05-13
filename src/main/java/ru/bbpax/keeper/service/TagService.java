@@ -31,7 +31,7 @@ public class TagService {
 
     public Tag getById(String id) {
         return repo.findById(id)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("Tag", id));
     }
 
     public List<Tag> getAll() {
@@ -39,7 +39,7 @@ public class TagService {
     }
 
     public void deleteById(String id) {
-        Tag tag = repo.findById(id).orElseThrow(NotFoundException::new);
+        Tag tag = repo.findById(id).orElseThrow(() -> new NotFoundException("Tag", id));
         if (repo.tagIsUsed(tag)) {
             throw new TagIsUsedException();
         }

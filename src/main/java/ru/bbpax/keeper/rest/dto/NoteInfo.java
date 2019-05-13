@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDeserializer;
@@ -18,7 +17,6 @@ import java.util.List;
 import static ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDeserializer.DATE_TIME_PATTERN;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class NoteInfo {
@@ -32,4 +30,8 @@ public class NoteInfo {
     @NonNull
     private String description;
     private List<Tag> tags;
+
+    public NoteInfo() {
+        created = LocalDateTime.now();
+    }
 }

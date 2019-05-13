@@ -14,6 +14,8 @@ import ru.bbpax.keeper.service.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.bbpax.keeper.model.NoteTypes.NOTE;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -45,7 +47,7 @@ public class NoteService {
     public NoteDto getById(String id) {
         return repo.findById(id)
                 .map(note -> mapper.map(note, NoteDto.class))
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException(NOTE, id));
     }
 
     public List<NoteDto> getAll(NoteFilterRequest request) {

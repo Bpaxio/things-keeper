@@ -1,5 +1,7 @@
 package ru.bbpax.keeper.service.client;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 
 /**
@@ -12,7 +14,7 @@ public interface FilesClient {
      * @param file file to save.
      * @return link which can be used to get this file again.
      */
-    String saveFile(File file);
+    String saveFile(MultipartFile file);
 
     /**
      * Call to find and get file using link.
@@ -20,4 +22,10 @@ public interface FilesClient {
      * @return file or null if file is missing.
      */
     File getFile(String query);
+
+    /**
+     * Call to find and delete file using link.
+     * @param query "path" where file is placed.
+     */
+    void deleteFile(String query);
 }

@@ -52,6 +52,7 @@ public class RecipeDto {
     public String getTitle() {
         return info.getTitle();
     }
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = DATE_TIME_PATTERN)
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     public RecipeDto setCreated(LocalDateTime created) {
