@@ -48,7 +48,6 @@ public class LinkMarkController {
 
     @GetMapping
     @ResponseBody
-    // TODO: 2019-05-07 add filters as query params
     @ApiOperation("getAll")
     public List<LinkMarkDto> getAll(LinkMarkFilterRequest request) {
         return service.getAll(request);

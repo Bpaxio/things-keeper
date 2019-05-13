@@ -90,7 +90,7 @@ public class EntityUtil {
                 "step " + number,
                 number,
                 "step descr",
-                new Image("query", "image" + number + ".jpg")
+                new Image("link", "image" + number + ".jpg")
         );
     }
 

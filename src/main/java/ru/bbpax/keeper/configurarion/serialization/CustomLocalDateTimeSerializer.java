@@ -8,10 +8,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDeserializer.DATE_TIME_PATTERN;
+
 public class CustomLocalDateTimeSerializer extends StdSerializer<LocalDateTime> {
 
     private static DateTimeFormatter formatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
 
     public CustomLocalDateTimeSerializer() {
         this(null);
