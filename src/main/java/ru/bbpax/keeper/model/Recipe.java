@@ -21,6 +21,7 @@ import static ru.bbpax.keeper.model.NoteTypes.RECIPE;
 @QueryEntity
 public class Recipe extends AbstractNote {
 
+    private String category;
     @QueryEmbedded
     private Image image;
     @QueryEmbedded
@@ -29,7 +30,7 @@ public class Recipe extends AbstractNote {
     private List<Ingredient> ingredients;
     private String link;
 
-    public Recipe(String id, String title, LocalDateTime created, String description, List<Tag> tags, Image image, List<Step> steps, List<Ingredient> ingredients, String link) {
+    public Recipe(String id, String title, LocalDateTime created, String description, List<Tag> tags, String category, Image image, List<Step> steps, List<Ingredient> ingredients, String link) {
         super(id, title, created, description, tags, RECIPE);
         this.image = image;
         this.steps = steps;
@@ -37,7 +38,7 @@ public class Recipe extends AbstractNote {
         this.link = link;
     }
 
-    public Recipe(String title, LocalDateTime created, String description, List<Tag> tags, Image image, List<Step> steps, List<Ingredient> ingredients, String link) {
+    public Recipe(String title, LocalDateTime created, String description, List<Tag> tags, String category, Image image, List<Step> steps, List<Ingredient> ingredients, String link) {
         super(title, created, description, tags, RECIPE);
         this.image = image;
         this.steps = steps;

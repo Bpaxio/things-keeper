@@ -15,8 +15,8 @@ public class RecipeFilterRequest extends BaseFilterRequest {
     private boolean ingredient;
     @ApiParam("'category' of the recipe")
     private String category;
-    @ApiParam("Search by time of cooking")
-    private String timeCooking;
+//    @ApiParam("Search by time of cooking")
+//    private String timeCooking;
 
     public RecipeFilterRequest() {
         ingredient = true;

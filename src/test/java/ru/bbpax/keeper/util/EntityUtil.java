@@ -72,6 +72,7 @@ public class EntityUtil {
                 LocalDateTime.now(),
                 "Description",
                 Arrays.asList(tag("First"), tag("Second"), tag("Third")),
+                "Sweet",
                 new Image("select", "image.jpg"),
                 Arrays.asList(step(1), step(2), step(3)),
                 Arrays.asList(ingredient(), ingredient(), ingredient()),

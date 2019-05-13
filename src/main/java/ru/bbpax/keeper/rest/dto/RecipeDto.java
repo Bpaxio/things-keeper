@@ -18,6 +18,7 @@ public class RecipeDto {
     @NonNull
     @JsonIgnore
     private NoteInfo info;
+    private String category;
     private ImageDto image;
     @NonNull
     private List<StepDto> steps;

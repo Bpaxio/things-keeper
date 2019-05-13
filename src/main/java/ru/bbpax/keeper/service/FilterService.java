@@ -87,6 +87,9 @@ public class FilterService {
             if (request.isLink()) {
                 stringExpression.or(recipe.link.containsIgnoreCase(request.getInput()));
             }
+            if (request.isIngredient()) {
+                stringExpression.or(recipe.ingredients.any().name.containsIgnoreCase(request.getInput()));
+            }
             builder.and(stringExpression.getValue());
         }
 
@@ -98,6 +101,10 @@ public class FilterService {
         TagFilter tagFilter = new TagFilter(findTagForFilter(request));
         if (tagFilter.isValid()) {
             builder.and(tagFilter.toPredicate());
+        }
+
+        if (!isBlank(request.getCategory())) {
+            builder.and(recipe.category.containsIgnoreCase(request.getCategory()));
         }
 
         return builder.getValue();
