@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bbpax.keeper.model.Recipe;
 import ru.bbpax.keeper.repo.recipe.RecipeRepo;
-import ru.bbpax.keeper.service.dto.RecipeDto;
+import ru.bbpax.keeper.rest.dto.RecipeDto;
+import ru.bbpax.keeper.rest.request.RecipeFilterRequest;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class RecipeService {
     private final RecipeRepo repo;
     private final TagService tagService;
+    private final FilterService filterService;
     private final ModelMapper mapper;
 
     @Transactional
@@ -53,6 +55,14 @@ public class RecipeService {
         return repo.findAll()
                 .stream()
                 .map(recipe -> mapper.map(recipe, RecipeDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<RecipeDto> getAll(RecipeFilterRequest request) {
+        log.info("filterDTO: {}", request);
+        return repo.findAll(filterService.makePredicate(request))
+                .stream()
+                .map(note -> mapper.map(note, RecipeDto.class))
                 .collect(Collectors.toList());
     }
 

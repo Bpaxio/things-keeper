@@ -1,4 +1,4 @@
-package ru.bbpax.keeper.repo;
+package ru.bbpax.keeper.repo.linkmark;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,6 @@ import ru.bbpax.keeper.model.LinkMark;
 import ru.bbpax.keeper.model.Note;
 import ru.bbpax.keeper.model.Recipe;
 import ru.bbpax.keeper.model.Tag;
-import ru.bbpax.keeper.repo.recipe.RecipeRepo;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,72 +32,72 @@ import static ru.bbpax.keeper.util.EntityUtil.tag;
 @TestPropertySource(value = "classpath:application-test.yml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ActiveProfiles("test")
-class RecipeRepoTest {
+class LinkMarkRepoTest {
     private final List<Tag> tags =
             Arrays.asList(tag("First"), tag("Second"), tag("Third"));
-    private final List<Recipe> recipes =
-                Arrays.asList(recipe(), recipe(), recipe());
+    private final List<LinkMark> linkMarks =
+                Arrays.asList(linkMark(), linkMark(), linkMark());
 
     @Autowired
-    private RecipeRepo repo;
+    private LinkMarkRepo repo;
 
     @BeforeEach
     void setUp(@Autowired MongoTemplate template) throws Exception {
         tags.forEach(template::save);
-        recipes.forEach(recipe -> recipe.setTags(tags));
-        recipes.forEach(template::save);
+        linkMarks.forEach(linkMark -> linkMark.setTags(tags));
+        linkMarks.forEach(template::save);
 
         final Note note = note();
         note.setTags(tags);
-        final LinkMark linkMark = linkMark();
-        linkMark.setTags(tags);
+        final Recipe recipe = recipe();
+        recipe.setTags(tags);
         template.save(note);
-        template.save(linkMark);
+        template.save(recipe);
         log.info("all: {}", template.findAll(Note.class));
     }
 
     @Test
     void testCreate(@Autowired MongoTemplate template) throws Exception {
-        int count = template.findAll(Recipe.class, "notes").size();
-        final Recipe save = recipe();
+        int count = template.findAll(LinkMark.class, "notes").size();
+        final LinkMark save = linkMark();
         save.setTags(tags);
-        final Recipe recipe = repo.save(save);
-        assertEquals(count + 1, template.findAll(Recipe.class, "notes").size());
-        assertEquals(recipe, template.findById(recipe.getId(), Recipe.class));
+        final LinkMark linkMark = repo.save(save);
+        assertEquals(count + 1, template.findAll(LinkMark.class, "notes").size());
+        assertEquals(linkMark, template.findById(linkMark.getId(), LinkMark.class));
     }
 
     @Test
     void testUpdate(@Autowired MongoTemplate template) throws Exception {
-        int count = template.findAll(Recipe.class, "notes").size();
-        final Recipe recipe = template.findById(recipes.get(0).getId(), Recipe.class);
+        int count = template.findAll(LinkMark.class, "notes").size();
+        final LinkMark recipe = template.findById(linkMarks.get(0).getId(), LinkMark.class);
         recipe.setDescription("another description");
         repo.save(recipe);
-        assertEquals(count, template.findAll(Recipe.class, "notes").size());
-        assertEquals(recipe, template.findById(recipe.getId(), Recipe.class));
+        assertEquals(count, template.findAll(LinkMark.class, "notes").size());
+        assertEquals(recipe, template.findById(recipe.getId(), LinkMark.class));
     }
 
     @Test
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     void testFindById() throws Exception {
-        assertNotNull(repo.findById(recipes.get(0).getId()).get());
-        assertEquals(recipes.get(0), repo.findById(recipes.get(0).getId()).get());
-        assertNotNull(repo.findById(recipes.get(1).getId()).get());
-        assertEquals(recipes.get(1), repo.findById(recipes.get(1).getId()).get());
-        assertNotNull(repo.findById(recipes.get(2).getId()).get());
-        assertEquals(recipes.get(2), repo.findById(recipes.get(2).getId()).get());
+        assertNotNull(repo.findById(linkMarks.get(0).getId()).get());
+        assertEquals(linkMarks.get(0), repo.findById(linkMarks.get(0).getId()).get());
+        assertNotNull(repo.findById(linkMarks.get(1).getId()).get());
+        assertEquals(linkMarks.get(1), repo.findById(linkMarks.get(1).getId()).get());
+        assertNotNull(repo.findById(linkMarks.get(2).getId()).get());
+        assertEquals(linkMarks.get(2), repo.findById(linkMarks.get(2).getId()).get());
     }
 
     @Test
     void testFindAll(@Autowired MongoTemplate template) throws Exception {
-        final List<Recipe> all = repo.findAll();
-        assertEquals(recipes.size(), all.size());
-        assertEquals(recipes, all);
+        final List<LinkMark> all = repo.findAll();
+        assertEquals(linkMarks.size(), all.size());
+        assertEquals(linkMarks, all);
     }
 
     @Test
     void testDelete(@Autowired MongoTemplate template) throws Exception {
-        int count = template.findAll(Recipe.class, "notes").size();
-        repo.deleteById(recipes.get(0).getId());
-        assertEquals(count - 1, template.findAll(Recipe.class, "notes").size());
+        int count = template.findAll(LinkMark.class, "notes").size();
+        repo.deleteById(linkMarks.get(0).getId());
+        assertEquals(count - 1, template.findAll(LinkMark.class, "notes").size());
     }
 }

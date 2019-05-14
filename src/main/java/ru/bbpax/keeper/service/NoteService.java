@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bbpax.keeper.model.Note;
 import ru.bbpax.keeper.repo.note.NoteRepo;
-import ru.bbpax.keeper.service.dto.NoteDto;
+import ru.bbpax.keeper.rest.dto.NoteDto;
+import ru.bbpax.keeper.rest.request.NoteFilterRequest;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class NoteService {
     private final NoteRepo repo;
     private final TagService tagService;
+    private final FilterService filterService;
     private final ModelMapper mapper;
 
     @Transactional
@@ -44,6 +46,14 @@ public class NoteService {
         return repo.findById(id)
                 .map(note -> mapper.map(note, NoteDto.class))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public List<NoteDto> getAll(NoteFilterRequest request) {
+        log.info("filterDTO: {}", request);
+        return repo.findAll(filterService.makePredicate(request))
+                .stream()
+                .map(note -> mapper.map(note, NoteDto.class))
+                .collect(Collectors.toList());
     }
 
     public List<NoteDto> getAll() {

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.bbpax.keeper.model.LinkMark;
 import ru.bbpax.keeper.repo.linkmark.LinkMarkRepo;
-import ru.bbpax.keeper.service.dto.LinkMarkDto;
+import ru.bbpax.keeper.rest.dto.LinkMarkDto;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 
 import java.util.Arrays;

@@ -1,12 +1,12 @@
-package ru.bbpax.keeper.service.dto;
+package ru.bbpax.keeper.rest.dto;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StepDto {
 
     private String id;

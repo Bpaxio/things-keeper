@@ -1,4 +1,4 @@
-package ru.bbpax.keeper.repo;
+package ru.bbpax.keeper.repo.note;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,20 +11,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.bbpax.keeper.model.LinkMark;
 import ru.bbpax.keeper.model.Note;
-import ru.bbpax.keeper.model.Recipe;
 import ru.bbpax.keeper.model.Tag;
-import ru.bbpax.keeper.repo.note.NoteRepo;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static ru.bbpax.keeper.util.EntityUtil.linkMark;
 import static ru.bbpax.keeper.util.EntityUtil.note;
-import static ru.bbpax.keeper.util.EntityUtil.recipe;
 import static ru.bbpax.keeper.util.EntityUtil.tag;
 
 @Slf4j
@@ -43,22 +38,16 @@ class NoteRepoTest {
     private NoteRepo repo;
 
     @BeforeEach
-    void setUp(@Autowired MongoTemplate template) throws Exception {
+    void setUp(@Autowired MongoTemplate template) {
         tags.forEach(template::save);
         notes.forEach(note -> note.setTags(tags));
         notes.forEach(template::save);
 
-        final Recipe recipe = recipe();
-        recipe.setTags(tags);
-        final LinkMark linkMark = linkMark();
-        linkMark.setTags(tags);
-        template.save(recipe);
-        template.save(linkMark);
         log.info("all: {}", template.findAll(Note.class));
     }
 
     @Test
-    void testCreate(@Autowired MongoTemplate template) throws Exception {
+    void testCreate(@Autowired MongoTemplate template) {
         int count = template.findAll(Note.class, "notes").size();
         final Note save = note();
         save.setTags(tags);
@@ -68,7 +57,7 @@ class NoteRepoTest {
     }
 
     @Test
-    void testUpdate(@Autowired MongoTemplate template) throws Exception {
+    void testUpdate(@Autowired MongoTemplate template) {
         int count = template.findAll(Note.class, "notes").size();
         final Note note = template.findById(notes.get(0).getId(), Note.class);
         note.setDescription("another description");
@@ -79,7 +68,7 @@ class NoteRepoTest {
 
     @Test
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    void testFindById() throws Exception {
+    void testFindById() {
         assertNotNull(repo.findById(notes.get(0).getId()).get());
         assertEquals(notes.get(0), repo.findById(notes.get(0).getId()).get());
         assertNotNull(repo.findById(notes.get(1).getId()).get());
@@ -89,14 +78,14 @@ class NoteRepoTest {
     }
 
     @Test
-    void testFindAll(@Autowired MongoTemplate template) throws Exception {
+    void testFindAll(@Autowired MongoTemplate template) {
         final List<Note> all = repo.findAll();
         assertEquals(notes.size(), all.size());
         assertEquals(notes, all);
     }
 
     @Test
-    void testDelete(@Autowired MongoTemplate template) throws Exception {
+    void testDelete(@Autowired MongoTemplate template) {
         int count = template.findAll(Note.class, "notes").size();
         repo.deleteById(notes.get(0).getId());
         assertEquals(count - 1, template.findAll(Note.class, "notes").size());

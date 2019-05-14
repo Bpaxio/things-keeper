@@ -1,10 +1,12 @@
-package ru.bbpax.keeper.service.dto;
+package ru.bbpax.keeper.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NonNull;
+import org.springframework.format.annotation.DateTimeFormat;
 import ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDeserializer;
 import ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeSerializer;
 import ru.bbpax.keeper.model.Tag;
@@ -12,12 +14,16 @@ import ru.bbpax.keeper.model.Tag;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDeserializer.DATE_TIME_PATTERN;
+
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RecipeDto {
     private String id;
     @NonNull
     @JsonIgnore
     private NoteInfo info;
+    private String category;
     private ImageDto image;
     @NonNull
     private List<StepDto> steps;
@@ -46,7 +52,7 @@ public class RecipeDto {
     public String getTitle() {
         return info.getTitle();
     }
-
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = DATE_TIME_PATTERN)
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     public RecipeDto setCreated(LocalDateTime created) {
         this.info.setCreated(created);

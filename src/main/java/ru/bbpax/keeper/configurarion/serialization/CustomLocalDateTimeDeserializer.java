@@ -10,8 +10,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class CustomLocalDateTimeDeserializer extends StdDeserializer<LocalDateTime> {
+    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+
     private static DateTimeFormatter formatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
 
     public CustomLocalDateTimeDeserializer() {
         this(null);

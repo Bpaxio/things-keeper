@@ -14,12 +14,12 @@ public class Image {
     @Id
     @Field("_id")
     private String id;
-    private String query;
+    private String link;
     private String originalName;
 
-    public Image(String query, String originalName) {
+    public Image(String link, String originalName) {
         this();
-        this.query = query;
+        this.link = link;
         this.originalName = originalName;
     }
 

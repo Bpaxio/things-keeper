@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bbpax.keeper.model.LinkMark;
 import ru.bbpax.keeper.repo.linkmark.LinkMarkRepo;
-import ru.bbpax.keeper.service.dto.LinkMarkDto;
+import ru.bbpax.keeper.rest.dto.LinkMarkDto;
+import ru.bbpax.keeper.rest.request.LinkMarkFilterRequest;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class LinkMarkService {
     private final LinkMarkRepo repo;
     private final TagService tagService;
+    private final FilterService filterService;
     private final ModelMapper mapper;
 
     @Transactional
@@ -50,6 +52,14 @@ public class LinkMarkService {
         return repo.findAll()
                 .stream()
                 .map(linkMark -> mapper.map(linkMark, LinkMarkDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<LinkMarkDto> getAll(LinkMarkFilterRequest request) {
+        log.info("filterDTO: {}", request);
+        return repo.findAll(filterService.makePredicate(request))
+                .stream()
+                .map(note -> mapper.map(note, LinkMarkDto.class))
                 .collect(Collectors.toList());
     }
 

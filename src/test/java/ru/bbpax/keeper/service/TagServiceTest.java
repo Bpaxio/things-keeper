@@ -9,13 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.bbpax.keeper.model.Tag;
-import ru.bbpax.keeper.repo.TagRepo;
-import ru.bbpax.keeper.repo.note.NoteRepo;
+import ru.bbpax.keeper.repo.tag.TagRepo;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 import ru.bbpax.keeper.service.exception.TagIsUsedException;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +26,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static ru.bbpax.keeper.util.EntityUtil.note;
 import static ru.bbpax.keeper.util.EntityUtil.tag;
 
 @SpringBootTest
@@ -41,8 +38,6 @@ class TagServiceTest {
     }
     @MockBean
     private TagRepo repo;
-    @MockBean
-    private NoteRepo noteRepo;
 
     @Autowired
     private TagService service;
@@ -147,14 +142,18 @@ class TagServiceTest {
     void deleteById() {
         final Tag unusedTag = tag();
         final Tag usedTag = tag("First");
-        doReturn(Collections.emptyList()).when(noteRepo).findAllByTagId(unusedTag.getId());
-        doReturn(Collections.singletonList(note())).when(noteRepo).findAllByTagId(usedTag.getId());
+        doReturn(Optional.of(unusedTag)).when(repo).findById(unusedTag.getId());
+        doReturn(Optional.of(usedTag)).when(repo).findById(usedTag.getId());
+        doReturn(false).when(repo).tagIsUsed(unusedTag);
+        doReturn(true).when(repo).tagIsUsed(usedTag);
 
         service.deleteById(unusedTag.getId());
         assertThrows(TagIsUsedException.class, () -> service.deleteById(usedTag.getId()));
 
-        verify(noteRepo, times(1)).findAllByTagId(unusedTag.getId());
-        verify(noteRepo, times(1)).findAllByTagId(usedTag.getId());
+        verify(repo, times(1)).tagIsUsed(unusedTag);
+        verify(repo, times(1)).tagIsUsed(usedTag);
+        verify(repo, times(1)).findById(unusedTag.getId());
+        verify(repo, times(1)).findById(usedTag.getId());
         verify(repo, times(1)).deleteById(unusedTag.getId());
         verify(repo, times(0)).deleteById(usedTag.getId());
     }

@@ -1,8 +1,8 @@
-package ru.bbpax.keeper.service.dto;
+package ru.bbpax.keeper.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.bbpax.keeper.configurarion.serialization.CustomBigDecimalDeserializer;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class IngredientDto {
     private String id;
     private String name;

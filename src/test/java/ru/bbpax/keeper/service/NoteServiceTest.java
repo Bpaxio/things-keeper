@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.bbpax.keeper.model.Note;
 import ru.bbpax.keeper.repo.note.NoteRepo;
-import ru.bbpax.keeper.service.dto.NoteDto;
+import ru.bbpax.keeper.rest.dto.NoteDto;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 
 import java.util.Arrays;

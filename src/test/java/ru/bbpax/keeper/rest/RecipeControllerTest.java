@@ -14,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.bbpax.keeper.service.RecipeService;
-import ru.bbpax.keeper.service.dto.RecipeDto;
+import ru.bbpax.keeper.rest.dto.RecipeDto;
 
 import java.util.Collections;
 
@@ -97,10 +97,11 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$.id", is(recipe.getId())))
                 .andExpect(jsonPath("$.description", is(recipe.getDescription())))
                 .andExpect(jsonPath("$.tags", hasSize(3)))
+                .andExpect(jsonPath("$.category", is(recipe.getCategory())))
                 .andExpect(jsonPath("$.image", is(recipe.getImage())))
                 .andExpect(jsonPath("$.steps", hasSize(3)))
                 .andExpect(jsonPath("$.steps[0].id", is(recipe.getSteps().get(0).getId())))
-                .andExpect(jsonPath("$.steps[0].title", is(recipe.getSteps().get(0).getTitle())))
+                .andExpect(jsonPath("$.steps[0].input", is(recipe.getSteps().get(0).getTitle())))
                 .andExpect(jsonPath("$.steps[0].description", is(recipe.getSteps().get(0).getDescription())))
                 .andExpect(jsonPath("$.steps[0].stepNumber", is(recipe.getSteps().get(0).getStepNumber())))
                 .andExpect(jsonPath("$.steps[0].image", is(recipe.getSteps().get(0).getImage())))
@@ -111,7 +112,7 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$.ingredients[0].value", is(recipe.getIngredients().get(0).getValue().toString())))
                 .andExpect(jsonPath("$.ingredients[0].unit", is(recipe.getIngredients().get(0).getUnit())))
                 .andExpect(jsonPath("$.link", is(recipe.getLink())))
-                .andExpect(jsonPath("$.title", is(recipe.getTitle())))
+                .andExpect(jsonPath("$.input", is(recipe.getTitle())))
                 .andExpect(jsonPath("$.id", is(recipe.getId())));
 
         verify(service, times(1)).getById(recipe.getId());
@@ -131,10 +132,11 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$[0].id", is(recipe.getId())))
                 .andExpect(jsonPath("$[0].description", is(recipe.getDescription())))
                 .andExpect(jsonPath("$[0].tags", hasSize(3)))
+                .andExpect(jsonPath("$[0].category", is(recipe.getCategory())))
                 .andExpect(jsonPath("$[0].image", is(recipe.getImage())))
                 .andExpect(jsonPath("$[0].steps", hasSize(3)))
                 .andExpect(jsonPath("$[0].steps[0].id", is(recipe.getSteps().get(0).getId())))
-                .andExpect(jsonPath("$[0].steps[0].title", is(recipe.getSteps().get(0).getTitle())))
+                .andExpect(jsonPath("$[0].steps[0].input", is(recipe.getSteps().get(0).getTitle())))
                 .andExpect(jsonPath("$[0].steps[0].description", is(recipe.getSteps().get(0).getDescription())))
                 .andExpect(jsonPath("$[0].steps[0].stepNumber", is(recipe.getSteps().get(0).getStepNumber())))
                 .andExpect(jsonPath("$[0].steps[0].image", is(recipe.getSteps().get(0).getImage())))
@@ -146,7 +148,7 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$[0].ingredients[0].unit", is(recipe.getIngredients().get(0).getUnit())))
                 .andExpect(jsonPath("$[0].link", is(recipe.getLink())))
                 .andExpect(jsonPath("$[0].created", is(recipe.getCreated().toString())))
-                .andExpect(jsonPath("$[0].title", is(recipe.getTitle())))
+                .andExpect(jsonPath("$[0].input", is(recipe.getTitle())))
                 .andExpect(jsonPath("$[0].id", is(recipe.getId())));
 
 

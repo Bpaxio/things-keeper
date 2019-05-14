@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.bbpax.keeper.service.NoteService;
-import ru.bbpax.keeper.service.dto.NoteDto;
+import ru.bbpax.keeper.rest.dto.NoteDto;
 
 import java.util.Collections;
 
@@ -95,7 +95,7 @@ class NoteControllerTest {
                 .andExpect(jsonPath("$.description", is(note.getDescription())))
                 .andExpect(jsonPath("$.tags", hasSize(3)))
                 .andExpect(jsonPath("$.created", is(note.getCreated().toString())))
-                .andExpect(jsonPath("$.title", is(note.getTitle())))
+                .andExpect(jsonPath("$.input", is(note.getTitle())))
                 .andExpect(jsonPath("$.id", is(note.getId())));
 
         verify(service, times(1)).getById(note.getId());
@@ -116,7 +116,7 @@ class NoteControllerTest {
                 .andExpect(jsonPath("$[0].description", is(note.getDescription())))
                 .andExpect(jsonPath("$[0].tags", hasSize(3)))
                 .andExpect(jsonPath("$[0].created", is(note.getCreated().toString())))
-                .andExpect(jsonPath("$[0].title", is(note.getTitle())))
+                .andExpect(jsonPath("$[0].input", is(note.getTitle())))
                 .andExpect(jsonPath("$[0].id", is(note.getId())));
 
 
