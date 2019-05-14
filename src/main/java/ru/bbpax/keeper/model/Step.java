@@ -4,11 +4,12 @@ import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEmbedded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.bson.types.ObjectId;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @QueryEmbeddable
 public class Step {
@@ -29,7 +30,4 @@ public class Step {
         this.image = image;
     }
 
-    public Step() {
-        this.id = new ObjectId().toHexString();
-    }
 }

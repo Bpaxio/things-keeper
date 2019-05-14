@@ -16,3 +16,94 @@ Content-Type: application/json
 
 
 ###
+POST http://localhost:8080/api/v1/recipe
+Content-Type: application/json
+
+{
+  "category": "Dinner",
+  "description": "описание обеда",
+  "image": {
+    "originalName": "Картинка обеда.jpg"
+  },
+  "ingredients": [
+    {
+      "name": "meal",
+      "unit": "кг",
+      "value": 2
+    }
+  ],
+  "steps": [
+    {
+      "description": "все нарезать мелкими кубиками",
+      "image": {
+        "originalName": "мяско.jpg"
+      },
+      "stepNumber": 0,
+      "title": "разделка мяса"
+    },
+    {
+      "description": "Тушим 40 минут",
+      "image": {
+        "originalName": "готовое мяско.jpg"
+      },
+      "stepNumber": 1,
+      "title": "тушим"
+    }
+  ],
+  "tags": [
+    {
+      "id": "5cd965fb3adf4e56b93e3cdd",
+      "value": "хавка"
+    }
+  ],
+  "title": "Супер блюдо"
+}
+
+###
+
+PUT http://localhost:8080/api/v1/recipe
+Content-Type: application/json
+
+{
+  "id": "5cd96bb03adf4e5d1fc03b23",
+  "category": "Dinner",
+  "image": {
+    "id": "5cd96bb03adf4e5d1fc03b1d",
+    "originalName": "Картинка обеда.jpg"
+  },
+  "steps": [
+    {
+      "title": "разделка мяса",
+      "stepNumber": 0,
+      "description": "все нарезать мелкими кубиками",
+      "image": {
+        "id": "5cd96bb03adf4e5d1fc03b20",
+        "originalName": "мяско.jpg"
+      }
+    },
+    {
+      "title": "тушим",
+      "stepNumber": 1,
+      "description": "Тушим 40 минут",
+      "image": {
+        "id": "5cd96bb03adf4e5d1fc03b22",
+        "originalName": "готовое мяско.jpg"
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "name": "meal",
+      "value": "2",
+      "unit": "кг"
+    }
+  ],
+  "description": "описание обеда",
+  "tags": [
+    {
+      "id": "5cd965fb3adf4e56b93e3cdd",
+      "value": "хавка"
+    }
+  ],
+  "title": "Новое Мясо в горшке"
+}

@@ -14,6 +14,8 @@ import ru.bbpax.keeper.service.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.bbpax.keeper.model.NoteTypes.LINK_MARK;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -45,7 +47,7 @@ public class LinkMarkService {
     public LinkMarkDto getById(String id) {
         return repo.findById(id)
                 .map(linkMark -> mapper.map(linkMark, LinkMarkDto.class))
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException(LINK_MARK, id));
     }
 
     public List<LinkMarkDto> getAll() {

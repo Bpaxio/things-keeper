@@ -9,3 +9,6 @@ logging:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
 server:
   port: 8080
+filer:
+  host: http://localhost
+  port: 8088
