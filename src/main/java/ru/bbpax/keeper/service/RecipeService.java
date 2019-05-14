@@ -98,7 +98,9 @@ public class RecipeService {
                 .orElseThrow(() -> new NotFoundException("Image", imageId));
         image.setOriginalName(file.getOriginalFilename());
 
-        String link = client.saveFile(file);
+        String link = image.getLink() == null
+                ? client.saveFile(id, imageId, file)
+                : client.updateFile(image.getLink(), file);
         image.setLink(link);
 
         repo.save(recipe);

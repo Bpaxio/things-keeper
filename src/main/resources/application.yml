@@ -10,5 +10,5 @@ logging:
 server:
   port: 8080
 filer:
-  host: http://examp.le
+  host: http://localhost
   port: 8088
