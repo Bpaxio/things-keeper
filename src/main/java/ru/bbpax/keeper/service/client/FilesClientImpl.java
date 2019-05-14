@@ -26,60 +26,34 @@ import static ru.bbpax.keeper.util.Helper.getFileExtention;
 @Slf4j
 @Component
 public class FilesClientImpl implements FilesClient {
+    private final String url;
+
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${filer.host}")
-    private String host;
-
-    @Value("${filer.port}")
-    private String port;
+    public FilesClientImpl(@Value("${filer.host}") String host,
+                           @Value("${filer.port}") String port) {
+        this.url = host + ":" + port + "/files/";
+    }
 
     @Override
-    public String saveFile(String id, String imageId, MultipartFile file) {
-        String url = host + ":" + port + "/files/";
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_UTF8_VALUE);
-        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=file");
-        httpHeaders.set(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getSize()));
-
-        HttpEntity<MultiValueMap<String, Object>> request =
-                new HttpEntity<>(createFileBody(file), httpHeaders);
-        ResponseEntity<ImageResponse> exchange = restTemplate
-                .exchange(url, HttpMethod.POST, request, ImageResponse.class);
-        log.info("result: {} - {}", exchange.getStatusCode(), exchange.getBody());
-        if (exchange.getBody() == null) throw new SaveFileException(exchange.getStatusCode(), exchange.getStatusCodeValue());
-        return url + exchange.getBody().getPath();
+    public String saveFile(String noteId, String imageId, MultipartFile file) {
+        String link = this.url + noteId + "/" + imageId;
+        return exchangeFile(link, HttpMethod.POST, file);
     }
 
     @Override
     public String updateFile(String link, MultipartFile file) {
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_UTF8_VALUE);
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=file");
-        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        httpHeaders.set(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getSize()));
-
-        HttpEntity<MultiValueMap<String, Object>> request =
-                new HttpEntity<>(createFileBody(file), httpHeaders);
-        ResponseEntity<ImageResponse> exchange = restTemplate
-                .exchange(link, HttpMethod.PUT, request, ImageResponse.class);// TODO: 2019-05-14 java.net.ConnectException
-        log.info("result: {} - {}", exchange.getStatusCode(), exchange.getBody());
-        if (exchange.getBody() == null) throw new SaveFileException(exchange.getStatusCode(), exchange.getStatusCodeValue());
-        String url = host + ":" + port + "/files/";
-        return url + exchange.getBody().getPath();
+        return exchangeFile(link, HttpMethod.PUT, file);
     }
 
     @Override
-    // TODO: 2019-05-14 Broken
     public File getFile(String link) {
+        // TODO: 2019-05-14 Broken
         log.info("get file by url: {}", link);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
+        httpHeaders.set(HttpHeaders.ACCEPT, MediaType.IMAGE_JPEG_VALUE);
         HttpEntity<Object> request =
                 new HttpEntity<>(httpHeaders);
         ResponseEntity<MultiValueMap<String, Object>> exchange = restTemplate
@@ -90,8 +64,30 @@ public class FilesClientImpl implements FilesClient {
 
     @Override
     public void deleteFile(String link) {
+        log.info("delete file by url: {}", link);
         restTemplate.delete(link);
         log.info("file, located in {} was successfully deleted", link);
+    }
+
+    private String exchangeFile(String target, HttpMethod method,  MultipartFile file) {
+        HttpEntity<MultiValueMap<String, Object>> request =
+                new HttpEntity<>(createFileBody(file), setUpHeaders(file));
+
+        ResponseEntity<ImageResponse> exchange = restTemplate
+                .exchange(target, method, request, ImageResponse.class);// TODO: 2019-05-14 java.net.ConnectException
+
+        log.info("result: {} - {}", exchange.getStatusCode(), exchange.getBody());
+        if (exchange.getBody() == null) throw new SaveFileException(exchange.getStatusCode(), exchange.getStatusCodeValue());
+        return this.url + exchange.getBody().getPath();
+    }
+
+    private HttpHeaders setUpHeaders(MultipartFile file) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_UTF8_VALUE);
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=file");
+        httpHeaders.set(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getSize()));
+        return httpHeaders;
     }
 
     private MultiValueMap<String, Object> createFileBody(MultipartFile file) {
