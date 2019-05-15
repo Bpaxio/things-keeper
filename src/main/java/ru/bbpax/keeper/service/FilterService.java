@@ -39,15 +39,7 @@ public class FilterService {
             builder.and(stringExpression.getValue());
         }
 
-        Filter intervalFilter = new DateIntervalFilter(request.getFrom(), request.getTo());
-        if (intervalFilter.isValid()) {
-            builder.and(intervalFilter.toPredicate());
-        }
-
-        TagFilter tagFilter = new TagFilter(findTagForFilter(request));
-        if (tagFilter.isValid()) {
-            builder.and(tagFilter.toPredicate());
-        }
+        configureFilters(builder, request);
 
         return builder.getValue();
     }
@@ -65,16 +57,7 @@ public class FilterService {
             }
             builder.and(stringExpression.getValue());
         }
-
-        Filter intervalFilter = new DateIntervalFilter(request.getFrom(), request.getTo());
-        if (intervalFilter.isValid()) {
-            builder.and(intervalFilter.toPredicate());
-        }
-
-        TagFilter tagFilter = new TagFilter(findTagForFilter(request));
-        if (tagFilter.isValid()) {
-            builder.and(tagFilter.toPredicate());
-        }
+        configureFilters(builder, request);
 
         return builder.getValue();
     }
@@ -93,6 +76,16 @@ public class FilterService {
             builder.and(stringExpression.getValue());
         }
 
+        configureFilters(builder, request);
+
+        if (!isBlank(request.getCategory())) {
+            builder.and(recipe.category.containsIgnoreCase(request.getCategory()));
+        }
+
+        return builder.getValue();
+    }
+
+    private <T extends BaseFilterRequest> void configureFilters(BooleanBuilder builder, T request) {
         Filter intervalFilter = new DateIntervalFilter(request.getFrom(), request.getTo());
         if (intervalFilter.isValid()) {
             builder.and(intervalFilter.toPredicate());
@@ -102,12 +95,6 @@ public class FilterService {
         if (tagFilter.isValid()) {
             builder.and(tagFilter.toPredicate());
         }
-
-        if (!isBlank(request.getCategory())) {
-            builder.and(recipe.category.containsIgnoreCase(request.getCategory()));
-        }
-
-        return builder.getValue();
     }
 
     private <T extends BaseFilterRequest> Tag findTagForFilter(T filterRequest) {
