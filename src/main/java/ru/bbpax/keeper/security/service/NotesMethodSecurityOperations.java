@@ -4,11 +4,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.core.Authentication;
+import ru.bbpax.keeper.model.AbstractNote;
 import ru.bbpax.keeper.security.model.CustomUserPrincipal;
 import ru.bbpax.keeper.security.model.Privilege;
 import ru.bbpax.keeper.security.model.User;
 
-import static ru.bbpax.keeper.security.model.AccessLevels.ALL;
+import java.util.Collections;
+
+import static ru.bbpax.keeper.security.model.AccessLevels.DELETE;
+import static ru.bbpax.keeper.security.model.AccessLevels.READ;
+import static ru.bbpax.keeper.security.model.AccessLevels.SHARE;
+import static ru.bbpax.keeper.security.model.AccessLevels.WRITE;
 
 @Slf4j
 public class NotesMethodSecurityOperations
@@ -22,12 +28,36 @@ public class NotesMethodSecurityOperations
         super(authentication);
     }
 
-    public boolean isNoteOwner(String noteId) {
-        log.info("verify if user is owner of {}", noteId);
+
+    public boolean hasReadPrivileges(AbstractNote note) {
+        return hasPrivileges(note, new Privilege(note.getId(), Collections.singleton(READ)));
+    }
+
+    public boolean hasWritePrivileges(AbstractNote note) {
+        return hasPrivileges(note, new Privilege(note.getId(), Collections.singleton(WRITE)));
+    }
+
+    public boolean hasDeletePrivileges(AbstractNote note) {
+        return hasPrivileges(note, new Privilege(note.getId(), Collections.singleton(DELETE)));
+    }
+
+    public boolean hasSharePrivileges(AbstractNote note) {
+        return hasPrivileges(note, new Privilege(note.getId(), Collections.singleton(SHARE)));
+    }
+
+    public boolean hasPrivileges(AbstractNote note, Privilege privilege) {
+        log.info("verify if user has privilege {} for {}", privilege, note);
         if (!(this.getPrincipal() instanceof CustomUserPrincipal)) return false;
-        CustomUserPrincipal principal = ((CustomUserPrincipal) this.getPrincipal());
-        User user = principal.getUser();
-        return user.getPrivileges().contains(new Privilege(noteId, ALL));
+        if (isNoteOwner(note)) return true;
+        User user = ((CustomUserPrincipal) this.getPrincipal()).getUser();
+        return user.getPrivileges().contains(privilege);
+    }
+
+    public boolean isNoteOwner(AbstractNote note) {
+        log.info("verify if user is owner of {}", note);
+        if (!(this.getPrincipal() instanceof CustomUserPrincipal)) return false;
+        User user = ((CustomUserPrincipal) this.getPrincipal()).getUser();
+        return note.getCreatedBy().equals(user.getId());
     }
 
     @Override
