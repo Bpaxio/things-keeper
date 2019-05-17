@@ -1,11 +1,12 @@
-package ru.bbpax.keeper.configurarion;
+package ru.bbpax.keeper.configurarion.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +15,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.bbpax.keeper.security.token.TokenProvider;
+import ru.bbpax.keeper.security.token.TokenConfigurer;
 
 /**
  * @author Vlad Rakhlinskii
@@ -21,13 +24,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    public static final int ENCODING_STRENGTH = 15;
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    public static final int ENCODING_STRENGTH = 9;
 
     @Autowired
     @Qualifier("customUserDetailsService")
     private UserDetailsService service;
+
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @Override
     public void configure(WebSecurity web) {
@@ -36,34 +41,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                    .authorizeRequests().anyRequest().authenticated()
-                .and()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http
+                .csrf().disable()
+                .httpBasic().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .rememberMe().key("bla-bla-bla").rememberMeCookieName("tk-token")
                 .and()
-                    .httpBasic();
+                    .authorizeRequests()
+                        .antMatchers(HttpMethod.POST,"/auth/login").permitAll()
+                        .antMatchers("/api/**").authenticated()
+                .and()
+                .apply(new TokenConfigurer(tokenProvider));
     }
 
     @Autowired
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(service);
-    }
-
-    @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return super.userDetailsServiceBean();
-    }
-
-    @Override
-    protected UserDetailsService userDetailsService() {
-        return super.userDetailsService();
+        auth.userDetailsService(service)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(ENCODING_STRENGTH);
+    }
+
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }

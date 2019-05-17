@@ -2,12 +2,16 @@ package ru.bbpax.keeper.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +63,7 @@ public class RecipeController {
     @GetMapping
     @ResponseBody
     @ApiOperation("getAll")
+    @PostFilter("hasAccessTo(filterObject.id)")
     public List<RecipeDto> getAll(RecipeFilterRequest request) {
         return service.getAll(request);
     }

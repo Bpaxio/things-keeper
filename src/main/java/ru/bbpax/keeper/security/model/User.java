@@ -14,13 +14,15 @@ import java.util.UUID;
 
 @Data
 @Document(collection = "users")
-public class User implements UserDetails {
+public class User {
     @Id
     @Field("_id")
     private UUID id;
     private String password;
     private String username;
     private Set<GrantedAuthority> authorities;
+    private Set<Privilege> privileges;
+
     private boolean accountNonExpired;
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
@@ -37,40 +39,6 @@ public class User implements UserDetails {
         this.accountNonLocked = true;
         this.credentialsNonExpired = true;
         this.authorities = Collections.emptySet();
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
+        this.privileges = Collections.emptySet();
     }
 }

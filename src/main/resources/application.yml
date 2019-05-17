@@ -1,4 +1,9 @@
 spring:
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+
   data:
     mongodb:
       database: keeper

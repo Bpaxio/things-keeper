@@ -1,5 +1,6 @@
 package ru.bbpax.keeper.service.client;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +49,7 @@ public class FilesClientImpl implements FilesClient {
     }
 
     @Override
+    @SneakyThrows
     public File getFile(String link) {
         // TODO: 2019-05-14 Broken
         log.info("get file by url: {}", link);
@@ -59,7 +61,7 @@ public class FilesClientImpl implements FilesClient {
         ResponseEntity<MultiValueMap<String, Object>> exchange = restTemplate
                 .exchange(link, HttpMethod.GET, request, ParameterizedTypeReference.forType(LinkedMultiValueMap.class));
         log.info("result: {} - {}", exchange.getStatusCode(), exchange.getBody());
-        return Paths.get("/Users/Bpaxio/Documents/workspace/otus/things-keeper/src/main/resources/Bug.jpg").toFile();
+        return Paths.get(getClass().getClassLoader().getResource("Bug.jpg").toURI()).toFile();
     }
 
     @Override
