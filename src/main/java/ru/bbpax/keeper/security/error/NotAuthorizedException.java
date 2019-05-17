@@ -1,4 +1,4 @@
-package ru.bbpax.keeper.security.token.error;
+package ru.bbpax.keeper.security.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

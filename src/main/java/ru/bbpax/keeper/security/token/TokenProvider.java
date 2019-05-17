@@ -30,8 +30,7 @@ public class TokenProvider {
     private final UserDetailsService service;
 
     @Autowired
-    public TokenProvider(@Qualifier("customUserDetailsService")
-                                        UserDetailsService service) {
+    public TokenProvider(@Qualifier("customUserDetailsService") UserDetailsService service) {
         this.service = service;
     }
 

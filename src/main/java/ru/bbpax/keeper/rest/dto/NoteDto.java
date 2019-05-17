@@ -19,7 +19,6 @@ import static ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDes
 
 @Data
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class NoteDto {
     private String id;
     @NonNull

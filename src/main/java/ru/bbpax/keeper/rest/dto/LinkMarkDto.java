@@ -17,7 +17,6 @@ import java.util.List;
 import static ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDeserializer.DATE_TIME_PATTERN;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LinkMarkDto {
     private String id;
     @NonNull

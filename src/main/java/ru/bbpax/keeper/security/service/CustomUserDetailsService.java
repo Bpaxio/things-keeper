@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.bbpax.keeper.security.model.CustomUserPrincipal;
-import ru.bbpax.keeper.security.model.User;
 import ru.bbpax.keeper.security.repo.UserRepo;
 
 @Slf4j

@@ -46,10 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .rememberMe().key("bla-bla-bla").rememberMeCookieName("tk-token")
-                .and()
                     .authorizeRequests()
-                        .antMatchers(HttpMethod.POST,"/auth/login").permitAll()
+                        .antMatchers(HttpMethod.POST,"/auth/login", "/auth/register").permitAll()
                         .antMatchers("/api/**").authenticated()
                 .and()
                 .apply(new TokenConfigurer(tokenProvider));

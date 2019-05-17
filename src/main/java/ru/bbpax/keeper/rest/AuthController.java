@@ -3,19 +3,14 @@ package ru.bbpax.keeper.rest;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bbpax.keeper.rest.security.AuthRequest;
 import ru.bbpax.keeper.rest.security.AuthResponse;
-import ru.bbpax.keeper.security.token.TokenProvider;
+import ru.bbpax.keeper.security.service.UserAuthService;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -24,27 +19,19 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("auth")
 @AllArgsConstructor
 public class AuthController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private TokenProvider provider;
+    private final UserAuthService service;
 
     @PostMapping("login")
     @ApiOperation("login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest auth) {
-        String username = auth.getUsername();
-        try {
-            log.info("start auth");
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, auth.getPassword()));
-            log.info("success");
-            String token = provider.createToken(username);
-            log.info("token created");
-            return ok(AuthResponse.builder()
-                    .username(username)
-                    .token(token)
-                    .build());
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username/pass");
-        }
+        log.info("{}'s attempt to login", auth.getUsername());
+        return ok(service.login(auth));
+    }
+
+    @PostMapping("register")
+    @ApiOperation("register")
+    public ResponseEntity<AuthResponse> register(@RequestBody AuthRequest auth) {
+        log.info("{}'s attempt to login", auth.getUsername());
+        return ok(service.register(auth));
     }
 }
