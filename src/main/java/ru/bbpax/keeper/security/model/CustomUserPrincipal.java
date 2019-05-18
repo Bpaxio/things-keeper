@@ -1,10 +1,16 @@
 package ru.bbpax.keeper.security.model;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
+@Slf4j
 public class CustomUserPrincipal implements UserDetails {
     private final User user;
 
@@ -16,7 +22,7 @@ public class CustomUserPrincipal implements UserDetails {
         return user;
     }
 
-    public Collection<? extends Privilege> getPrivileges() {
+    public Map<String, List<Privilege>> getPrivileges() {
         return user.getPrivileges();
     }
 
@@ -53,5 +59,25 @@ public class CustomUserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return user.isEnabled();
+    }
+
+    public boolean hasPrivilegeFor(String targetId, String accessLevel) {
+        final List<Privilege> privileges = user.getPrivileges().get(targetId);
+
+        return privileges != null && privileges.stream()
+                .anyMatch(privilege -> accessLevel.equals(privilege.getAccessLevel()));
+    }
+
+    public void addPrivilege(String targetId, String accessLevel) {
+        final List<Privilege> privileges = user.getPrivileges().get(targetId);
+        if (privileges == null) {
+            user.getPrivileges()
+                    .put(targetId, Collections.singletonList(new Privilege(accessLevel)));
+        } else if (privileges.stream()
+                .noneMatch(privilege -> accessLevel.equals(privilege.getAccessLevel()))) {
+            privileges.add(new Privilege(accessLevel));
+        }
+        log.info("user updated in memory: {}", user);
+
     }
 }

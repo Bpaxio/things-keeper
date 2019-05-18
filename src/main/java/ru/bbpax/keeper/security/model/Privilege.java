@@ -10,6 +10,5 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Privilege {
-    private String noteId;
-    private Set<String> accessLevels;
+    private String accessLevel;
 }

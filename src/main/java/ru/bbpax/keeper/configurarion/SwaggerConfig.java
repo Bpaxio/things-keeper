@@ -1,6 +1,5 @@
 package ru.bbpax.keeper.configurarion;
 
-import com.google.common.collect.Lists;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -40,11 +39,9 @@ public class SwaggerConfig {
     }
 
     private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope
-                = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Lists.newArrayList(
+        authorizationScopes[0] = new AuthorizationScope("global", "accessEverything");
+        return Collections.singletonList(
                 new SecurityReference("TOKEN", authorizationScopes));
     }
 }

@@ -1,4 +1,4 @@
-package ru.bbpax.keeper.security.service;
+package ru.bbpax.keeper.security.operations;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;

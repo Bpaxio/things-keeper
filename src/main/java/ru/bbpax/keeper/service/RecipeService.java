@@ -3,6 +3,7 @@ package ru.bbpax.keeper.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import static ru.bbpax.keeper.model.NoteTypes.RECIPE;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
+@PreAuthorize("hasAuthority('USER_ROLE')")
 public class RecipeService {
     private final RecipeRepo repo;
     private final TagService tagService;
@@ -47,7 +49,7 @@ public class RecipeService {
     }
 
     @Transactional
-    @PreAuthorize("")
+    @PreAuthorize("hasWritePrivilege(#dto.id)")
     public RecipeDto update(RecipeDto dto) {
         final Recipe recipe = mapper.map(dto, Recipe.class);
         log.info("recipe: {}", recipe);
@@ -57,12 +59,14 @@ public class RecipeService {
         return dto;
     }
 
+    @PreAuthorize("hasReadPrivilege(#id)")
     public RecipeDto getById(String id) {
         return repo.findById(id)
                 .map(recipe -> mapper.map(recipe, RecipeDto.class))
                 .orElseThrow(() -> new NotFoundException(RECIPE, id));
     }
 
+    @PostFilter("hasReadPrivilege(filterObject.id)")
     public List<RecipeDto> getAll() {
         return repo.findAll()
                 .stream()
@@ -70,6 +74,7 @@ public class RecipeService {
                 .collect(Collectors.toList());
     }
 
+    @PostFilter("hasReadPrivilege(filterObject.id)")
     public List<RecipeDto> getAll(RecipeFilterRequest request) {
         log.info("filterDTO: {}", request);
         return repo.findAll(filterService.makePredicate(request))
@@ -79,6 +84,7 @@ public class RecipeService {
     }
 
     @Transactional
+    @PreAuthorize("hasDeletePrivilege(#id)")
     public void deleteById(String id) {
         repo.findById(id).ifPresent(recipe -> {
             if (recipe.getImage() != null && recipe.getImage().getLink() != null) {
@@ -93,6 +99,7 @@ public class RecipeService {
     }
 
     @Transactional
+    @PreAuthorize("hasWritePrivilege(#id)")
     public ImageDto uploadFile(String id, String imageId, MultipartFile file) {
         final Recipe recipe = repo.findById(id)
                 .orElseThrow(() -> new NotFoundException(RECIPE, id));
@@ -107,17 +114,6 @@ public class RecipeService {
 
         repo.save(recipe);
         return mapper.map(image, ImageDto.class);
-    }
-
-    public File getImage(String id, String imageId) {
-        Recipe recipe = repo.findById(id).orElseThrow(() -> new NotFoundException(RECIPE, id));
-        Image image = findImageById(recipe, imageId)
-                .orElseThrow(() -> new NotFoundException("Image", imageId));
-        File file = client.getFile(image.getLink());
-        log.info("{} renamed to {} {}",
-                file.getName(), image.getOriginalName(),
-                file.renameTo(new File(image.getOriginalName())));
-        return file;
     }
 
     private Optional<Image> findImageById(Recipe recipe, String imageId) {

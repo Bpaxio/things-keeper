@@ -41,6 +41,7 @@ public class EntityUtil {
                 new ObjectId().toHexString(),
                 "Title",
                 LocalDateTime.now(),
+                "someUser",
                 "Description",
                 Arrays.asList(tag("First"), tag("Second"), tag("Third"))
         );
@@ -55,6 +56,7 @@ public class EntityUtil {
                 new ObjectId().toHexString(),
                 "Title",
                 LocalDateTime.now(),
+                "someUser",
                 "Description",
                 Arrays.asList(tag("First"), tag("Second"), tag("Third")),
                 "link"
@@ -70,6 +72,7 @@ public class EntityUtil {
                 new ObjectId().toHexString(),
                 "Title",
                 LocalDateTime.now(),
+                "someUser",
                 "Description",
                 Arrays.asList(tag("First"), tag("Second"), tag("Third")),
                 "Sweet",

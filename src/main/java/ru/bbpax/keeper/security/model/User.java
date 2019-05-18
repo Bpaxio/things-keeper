@@ -6,8 +6,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -19,7 +24,7 @@ public class User {
     private String password;
     private String username;
     private Set<GrantedAuthority> authorities;
-    private Set<Privilege> privileges;
+    private Map<String, List<Privilege>> privileges;
 
     private boolean accountNonExpired;
     private boolean accountNonLocked;
@@ -37,6 +42,6 @@ public class User {
         this.accountNonLocked = true;
         this.credentialsNonExpired = true;
         this.authorities = Collections.emptySet();
-        this.privileges = Collections.emptySet();
+        this.privileges = new HashMap<>();
     }
 }

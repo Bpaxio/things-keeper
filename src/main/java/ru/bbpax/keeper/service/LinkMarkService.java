@@ -3,6 +3,8 @@ package ru.bbpax.keeper.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bbpax.keeper.model.LinkMark;
@@ -20,6 +22,7 @@ import static ru.bbpax.keeper.model.NoteTypes.LINK_MARK;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
+@PreAuthorize("hasAuthority('USER_ROLE')")
 public class LinkMarkService {
     private final LinkMarkRepo repo;
     private final TagService tagService;
@@ -38,18 +41,21 @@ public class LinkMarkService {
     }
 
     @Transactional
+    @PreAuthorize("hasWritePrivilege(#dto.id)")
     public LinkMarkDto update(LinkMarkDto dto) {
         LinkMark linkMark = mapper.map(dto, LinkMark.class);
         linkMark.setTags(tagService.updateTags(linkMark.getTags()));
         return mapper.map(repo.save(linkMark), LinkMarkDto.class);
     }
 
+    @PreAuthorize("hasReadPrivilege(#id)")
     public LinkMarkDto getById(String id) {
         return repo.findById(id)
                 .map(linkMark -> mapper.map(linkMark, LinkMarkDto.class))
                 .orElseThrow(() -> new NotFoundException(LINK_MARK, id));
     }
 
+    @PostFilter("hasReadPrivilege(filterObject.id)")
     public List<LinkMarkDto> getAll() {
         return repo.findAll()
                 .stream()
@@ -57,6 +63,7 @@ public class LinkMarkService {
                 .collect(Collectors.toList());
     }
 
+    @PostFilter("hasReadPrivilege(filterObject.id)")
     public List<LinkMarkDto> getAll(LinkMarkFilterRequest request) {
         log.info("filterDTO: {}", request);
         return repo.findAll(filterService.makePredicate(request))
@@ -66,6 +73,7 @@ public class LinkMarkService {
     }
 
     @Transactional
+    @PreAuthorize("hasDeletePrivilege(#id)")
     public void deleteById(String id) {
         repo.deleteById(id);
     }

@@ -29,7 +29,7 @@ public class Note extends AbstractNote {
         super(title, created, description, tags, NOTE);
     }
 
-    public Note(String id, String title, LocalDateTime created, String description, List<Tag> tags) {
-        super(id, title, created, description, tags, NOTE);
+    public Note(String id, String title, LocalDateTime created, String createdBy, String description, List<Tag> tags) {
+        super(id, title, created, createdBy, description, tags, NOTE);
     }
 }
