@@ -1,12 +1,15 @@
 package ru.bbpax.keeper.configurarion;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.Contact;
 import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -19,9 +22,11 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
                 .securityContexts(Collections.singletonList(securityContext()))
                 .securitySchemes(Collections
                         .singletonList(new ApiKey("TOKEN", HttpHeaders.AUTHORIZATION, "header")))
@@ -43,5 +48,16 @@ public class SwaggerConfig {
         authorizationScopes[0] = new AuthorizationScope("global", "accessEverything");
         return Collections.singletonList(
                 new SecurityReference("TOKEN", authorizationScopes));
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfo(
+                "Things Keeper",
+                "Will save your notes.",
+                "0.1.0",
+                "Terms of service url",
+                new Contact("Vlad Rakhlinskii", "www.not-ready.com", "vrahlinskiy@cinimex.ru"),
+                "Apache License 2.0", "https://github.com/Bpaxio/things-keeper/blob/master/LICENSE",
+                Collections.emptyList());
     }
 }
