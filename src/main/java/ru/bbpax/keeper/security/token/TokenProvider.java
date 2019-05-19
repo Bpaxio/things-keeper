@@ -25,7 +25,7 @@ public class TokenProvider {
     @Value("${security.token.secret:!@D$sa%6def^SdtWf67gfw4vbr4dhj4s}")
     private String secret;
     @Value("${security.token.expire-time:600000}")
-    private long tokenLife = 400000; //ms
+    private long tokenLife; //ms
 
     private final UserDetailsService service;
 

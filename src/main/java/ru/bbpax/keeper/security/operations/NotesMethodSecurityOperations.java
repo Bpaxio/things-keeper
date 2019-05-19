@@ -42,6 +42,7 @@ public class NotesMethodSecurityOperations
 
     public boolean hasPrivilege(String targetId, String accessLevel) {
         log.info("verify if user has access {} for {}", accessLevel, targetId);
+        if (targetId == null) return true;
         if (!(this.getPrincipal() instanceof CustomUserPrincipal)) return false;
         if (isNoteOwner(targetId)) return true;
         CustomUserPrincipal principal = (CustomUserPrincipal) this.getPrincipal();

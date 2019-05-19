@@ -4,9 +4,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import ru.bbpax.keeper.model.Tag;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface TagRepo extends MongoRepository<Tag, String>, CustomTagRepo {
     Optional<Tag> findFirstByValue(String value);
+
+    List<Tag> findAllByValue(String value);
 }

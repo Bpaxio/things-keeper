@@ -36,6 +36,7 @@ public class Recipe extends AbstractNote {
         this.steps = steps;
         this.ingredients = ingredients;
         this.link = link;
+        this.category = category;
     }
 
     public Recipe(String title, LocalDateTime created, String description, List<Tag> tags, String category, Image image, List<Step> steps, List<Ingredient> ingredients, String link) {

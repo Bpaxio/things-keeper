@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -20,6 +21,7 @@ import java.util.Collections;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,9 +39,10 @@ import static ru.bbpax.keeper.util.EntityUtil.linkMarkDto;
  */
 @ExtendWith(SpringExtension.class)
 @WebMvcTest
+@WithMockUser
 class LinkMarkControllerTest {
     @Configuration
-    @Import({ LinkMarkController.class })
+    @Import({ LinkMarkController.class, MockMvcSecurityConfig.class })
     static class Config {
     }
 
@@ -87,7 +90,6 @@ class LinkMarkControllerTest {
         when(service.getById(linkMark.getId()))
                 .thenReturn(linkMark);
 
-        ObjectMapper mapper = new ObjectMapper();
         mvc.perform(get("/api/v1/linkmarks/" + linkMark.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -95,7 +97,7 @@ class LinkMarkControllerTest {
                 .andExpect(jsonPath("$.description", is(linkMark.getDescription())))
                 .andExpect(jsonPath("$.tags", hasSize(3)))
                 .andExpect(jsonPath("$.created", is(linkMark.getCreated().toString())))
-                .andExpect(jsonPath("$.input", is(linkMark.getTitle())))
+                .andExpect(jsonPath("$.title", is(linkMark.getTitle())))
                 .andExpect(jsonPath("$.link", is(linkMark.getLink())))
                 .andExpect(jsonPath("$.id", is(linkMark.getId())));
 
@@ -105,10 +107,9 @@ class LinkMarkControllerTest {
     @Test
     void getLinkMarks() throws Exception {
         LinkMarkDto linkMark = linkMarkDto();
-        when(service.getAll())
+        when(service.getAll(any()))
                 .thenReturn(Collections.singletonList(linkMark));
 
-        ObjectMapper mapper = new ObjectMapper();
         mvc.perform(get("/api/v1/linkmarks/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -117,12 +118,12 @@ class LinkMarkControllerTest {
                 .andExpect(jsonPath("$[0].description", is(linkMark.getDescription())))
                 .andExpect(jsonPath("$[0].tags", hasSize(3)))
                 .andExpect(jsonPath("$[0].created", is(linkMark.getCreated().toString())))
-                .andExpect(jsonPath("$[0].input", is(linkMark.getTitle())))
+                .andExpect(jsonPath("$[0].title", is(linkMark.getTitle())))
                 .andExpect(jsonPath("$[0].link", is(linkMark.getLink())))
                 .andExpect(jsonPath("$[0].id", is(linkMark.getId())));
 
 
-        verify(service, times(1)).getAll();
+        verify(service, times(1)).getAll(any());
     }
 
     @Test

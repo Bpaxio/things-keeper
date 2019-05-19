@@ -11,12 +11,14 @@ import ru.bbpax.keeper.model.LinkMark;
 import ru.bbpax.keeper.repo.linkmark.LinkMarkRepo;
 import ru.bbpax.keeper.rest.dto.LinkMarkDto;
 import ru.bbpax.keeper.rest.request.LinkMarkFilterRequest;
+import ru.bbpax.keeper.security.service.PrivilegeService;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.bbpax.keeper.model.NoteTypes.LINK_MARK;
+import static ru.bbpax.keeper.security.model.AccessLevels.OWN;
 
 @Slf4j
 @Service
@@ -28,6 +30,7 @@ public class LinkMarkService {
     private final TagService tagService;
     private final FilterService filterService;
     private final ModelMapper mapper;
+    private final PrivilegeService privilegeService;
 
     @Transactional
     public LinkMarkDto create(LinkMarkDto dto) {
@@ -36,6 +39,9 @@ public class LinkMarkService {
         log.info("create: {}", linkMark);
         linkMark.setTags(tagService.updateTags(linkMark.getTags()));
         final LinkMarkDto linkMarkDto = mapper.map(repo.save(linkMark), LinkMarkDto.class);
+
+        privilegeService.
+                addPrivilege(linkMarkDto.getId(), OWN);
         log.info("saved: {}", linkMarkDto);
         return linkMarkDto;
     }

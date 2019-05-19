@@ -15,15 +15,16 @@ import ru.bbpax.keeper.repo.recipe.RecipeRepo;
 import ru.bbpax.keeper.rest.dto.ImageDto;
 import ru.bbpax.keeper.rest.dto.RecipeDto;
 import ru.bbpax.keeper.rest.request.RecipeFilterRequest;
+import ru.bbpax.keeper.security.service.PrivilegeService;
 import ru.bbpax.keeper.service.client.FilesClient;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 
-import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.bbpax.keeper.model.NoteTypes.RECIPE;
+import static ru.bbpax.keeper.security.model.AccessLevels.OWN;
 
 @Slf4j
 @Service
@@ -36,6 +37,7 @@ public class RecipeService {
     private final FilterService filterService;
     private final FilesClient client;
     private final ModelMapper mapper;
+    private final PrivilegeService privilegeService;
 
     @Transactional
     public RecipeDto create(RecipeDto dto) {
@@ -44,6 +46,9 @@ public class RecipeService {
         log.info("create: {}", recipe);
         recipe.setTags(tagService.updateTags(recipe.getTags()));
         final RecipeDto recipeDto = mapper.map(repo.save(recipe), RecipeDto.class);
+
+        privilegeService.
+                addPrivilege(recipeDto.getId(), OWN);
         log.info("saved: {}", recipeDto);
         return recipeDto;
     }
