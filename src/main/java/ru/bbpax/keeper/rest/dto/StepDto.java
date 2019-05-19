@@ -5,7 +5,6 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StepDto {
 
     private String id;

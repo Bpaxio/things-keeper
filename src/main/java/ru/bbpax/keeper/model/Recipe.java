@@ -30,12 +30,13 @@ public class Recipe extends AbstractNote {
     private List<Ingredient> ingredients;
     private String link;
 
-    public Recipe(String id, String title, LocalDateTime created, String description, List<Tag> tags, String category, Image image, List<Step> steps, List<Ingredient> ingredients, String link) {
-        super(id, title, created, description, tags, RECIPE);
+    public Recipe(String id, String title, LocalDateTime created, String createdBy, String description, List<Tag> tags, String category, Image image, List<Step> steps, List<Ingredient> ingredients, String link) {
+        super(id, title, created, createdBy, description, tags, RECIPE);
         this.image = image;
         this.steps = steps;
         this.ingredients = ingredients;
         this.link = link;
+        this.category = category;
     }
 
     public Recipe(String title, LocalDateTime created, String description, List<Tag> tags, String category, Image image, List<Step> steps, List<Ingredient> ingredients, String link) {

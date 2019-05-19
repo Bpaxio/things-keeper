@@ -4,6 +4,7 @@ import com.querydsl.core.annotations.QueryEmbeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,6 +20,7 @@ public class Tag {
     @Id
     @Field("_id")
     private String id;
+    @NonNull
     private String value;
 
     public Tag(String value) {

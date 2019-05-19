@@ -23,6 +23,7 @@ public abstract class AbstractNote {
     private String id;
     private String title;
     private LocalDateTime created;
+    private String createdBy;
     private String description;
     @DBRef
     @QueryEmbedded

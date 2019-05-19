@@ -1,7 +1,6 @@
 package ru.bbpax.keeper.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,6 @@ import static ru.bbpax.keeper.configurarion.serialization.CustomLocalDateTimeDes
 
 @Data
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class NoteDto {
     private String id;
     @NonNull

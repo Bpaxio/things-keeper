@@ -41,6 +41,7 @@ public class EntityUtil {
                 new ObjectId().toHexString(),
                 "Title",
                 LocalDateTime.now(),
+                "someUser",
                 "Description",
                 Arrays.asList(tag("First"), tag("Second"), tag("Third"))
         );
@@ -55,6 +56,7 @@ public class EntityUtil {
                 new ObjectId().toHexString(),
                 "Title",
                 LocalDateTime.now(),
+                "someUser",
                 "Description",
                 Arrays.asList(tag("First"), tag("Second"), tag("Third")),
                 "link"
@@ -70,6 +72,7 @@ public class EntityUtil {
                 new ObjectId().toHexString(),
                 "Title",
                 LocalDateTime.now(),
+                "someUser",
                 "Description",
                 Arrays.asList(tag("First"), tag("Second"), tag("Third")),
                 "Sweet",
@@ -87,6 +90,7 @@ public class EntityUtil {
 
     public static Step step(int number) {
         return new Step(
+                new ObjectId().toHexString(),
                 "step " + number,
                 number,
                 "step descr",
@@ -101,6 +105,7 @@ public class EntityUtil {
     public static Ingredient ingredient() {
         final Random random = new Random();
         return new Ingredient(
+                new ObjectId().toHexString(),
                 "tasty food " + random.nextInt(300),
                 BigDecimal.valueOf(300 * random.nextDouble()).setScale(2, RoundingMode.HALF_UP),
                 "kg"

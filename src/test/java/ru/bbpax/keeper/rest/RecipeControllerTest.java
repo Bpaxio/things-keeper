@@ -10,9 +10,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import ru.bbpax.keeper.rest.dto.IngredientDto;
+import ru.bbpax.keeper.rest.dto.StepDto;
 import ru.bbpax.keeper.service.RecipeService;
 import ru.bbpax.keeper.rest.dto.RecipeDto;
 
@@ -21,6 +24,7 @@ import java.util.Collections;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,9 +43,10 @@ import static ru.bbpax.keeper.util.EntityUtil.recipeDto;
 @Slf4j
 @ExtendWith(SpringExtension.class)
 @WebMvcTest
+@WithMockUser
 class RecipeControllerTest {
     @Configuration
-    @Import({ RecipeController.class })
+    @Import({ RecipeController.class, MockMvcSecurityConfig.class })
     static class Config {
     }
 
@@ -88,9 +93,8 @@ class RecipeControllerTest {
         RecipeDto recipe = recipeDto();
         when(service.getById(recipe.getId()))
                 .thenReturn(recipe);
-
-        ObjectMapper mapper = new ObjectMapper();
-
+        final StepDto expectedStep = recipe.getSteps().get(0);
+        final IngredientDto expectedIngredient = recipe.getIngredients().get(0);
         mvc.perform(get("/api/v1/recipes/" + recipe.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -98,21 +102,25 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$.description", is(recipe.getDescription())))
                 .andExpect(jsonPath("$.tags", hasSize(3)))
                 .andExpect(jsonPath("$.category", is(recipe.getCategory())))
-                .andExpect(jsonPath("$.image", is(recipe.getImage())))
+                .andExpect(jsonPath("$.image.id", is(recipe.getImage().getId())))
+                .andExpect(jsonPath("$.image.link", is(recipe.getImage().getLink())))
+                .andExpect(jsonPath("$.image.originalName", is(recipe.getImage().getOriginalName())))
                 .andExpect(jsonPath("$.steps", hasSize(3)))
-                .andExpect(jsonPath("$.steps[0].id", is(recipe.getSteps().get(0).getId())))
-                .andExpect(jsonPath("$.steps[0].input", is(recipe.getSteps().get(0).getTitle())))
-                .andExpect(jsonPath("$.steps[0].description", is(recipe.getSteps().get(0).getDescription())))
-                .andExpect(jsonPath("$.steps[0].stepNumber", is(recipe.getSteps().get(0).getStepNumber())))
-                .andExpect(jsonPath("$.steps[0].image", is(recipe.getSteps().get(0).getImage())))
+                .andExpect(jsonPath("$.steps[0].id", is(expectedStep.getId())))
+                .andExpect(jsonPath("$.steps[0].title", is(expectedStep.getTitle())))
+                .andExpect(jsonPath("$.steps[0].description", is(expectedStep.getDescription())))
+                .andExpect(jsonPath("$.steps[0].stepNumber", is(expectedStep.getStepNumber())))
+                .andExpect(jsonPath("$.steps[0].image.id", is(expectedStep.getImage().getId())))
+                .andExpect(jsonPath("$.steps[0].image.link", is(expectedStep.getImage().getLink())))
+                .andExpect(jsonPath("$.steps[0].image.originalName", is(expectedStep.getImage().getOriginalName())))
                 .andExpect(jsonPath("$.created", is(recipe.getCreated().toString())))
                 .andExpect(jsonPath("$.ingredients", hasSize(3)))
-                .andExpect(jsonPath("$.ingredients[0].id", is(recipe.getIngredients().get(0).getId())))
-                .andExpect(jsonPath("$.ingredients[0].name", is(recipe.getIngredients().get(0).getName())))
-                .andExpect(jsonPath("$.ingredients[0].value", is(recipe.getIngredients().get(0).getValue().toString())))
-                .andExpect(jsonPath("$.ingredients[0].unit", is(recipe.getIngredients().get(0).getUnit())))
+                .andExpect(jsonPath("$.ingredients[0].id", is(expectedIngredient.getId())))
+                .andExpect(jsonPath("$.ingredients[0].name", is(expectedIngredient.getName())))
+                .andExpect(jsonPath("$.ingredients[0].value", is(expectedIngredient.getValue().toString())))
+                .andExpect(jsonPath("$.ingredients[0].unit", is(expectedIngredient.getUnit())))
                 .andExpect(jsonPath("$.link", is(recipe.getLink())))
-                .andExpect(jsonPath("$.input", is(recipe.getTitle())))
+                .andExpect(jsonPath("$.title", is(recipe.getTitle())))
                 .andExpect(jsonPath("$.id", is(recipe.getId())));
 
         verify(service, times(1)).getById(recipe.getId());
@@ -121,10 +129,11 @@ class RecipeControllerTest {
     @Test
     void getRecipes() throws Exception {
         RecipeDto recipe = recipeDto();
-        when(service.getAll())
+        when(service.getAll(any()))
                 .thenReturn(Collections.singletonList(recipe));
 
-        ObjectMapper mapper = new ObjectMapper();
+        final StepDto expectedStep = recipe.getSteps().get(0);
+        final IngredientDto expectedIngredient = recipe.getIngredients().get(0);
         mvc.perform(get("/api/v1/recipes/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -133,26 +142,30 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$[0].description", is(recipe.getDescription())))
                 .andExpect(jsonPath("$[0].tags", hasSize(3)))
                 .andExpect(jsonPath("$[0].category", is(recipe.getCategory())))
-                .andExpect(jsonPath("$[0].image", is(recipe.getImage())))
+                .andExpect(jsonPath("$[0].image.id", is(recipe.getImage().getId())))
+                .andExpect(jsonPath("$[0].image.link", is(recipe.getImage().getLink())))
+                .andExpect(jsonPath("$[0].image.originalName", is(recipe.getImage().getOriginalName())))
                 .andExpect(jsonPath("$[0].steps", hasSize(3)))
-                .andExpect(jsonPath("$[0].steps[0].id", is(recipe.getSteps().get(0).getId())))
-                .andExpect(jsonPath("$[0].steps[0].input", is(recipe.getSteps().get(0).getTitle())))
-                .andExpect(jsonPath("$[0].steps[0].description", is(recipe.getSteps().get(0).getDescription())))
-                .andExpect(jsonPath("$[0].steps[0].stepNumber", is(recipe.getSteps().get(0).getStepNumber())))
-                .andExpect(jsonPath("$[0].steps[0].image", is(recipe.getSteps().get(0).getImage())))
+                .andExpect(jsonPath("$[0].steps[0].id", is(expectedStep.getId())))
+                .andExpect(jsonPath("$[0].steps[0].title", is(expectedStep.getTitle())))
+                .andExpect(jsonPath("$[0].steps[0].description", is(expectedStep.getDescription())))
+                .andExpect(jsonPath("$[0].steps[0].stepNumber", is(expectedStep.getStepNumber())))
+                .andExpect(jsonPath("$[0].steps[0].image.id", is(expectedStep.getImage().getId())))
+                .andExpect(jsonPath("$[0].steps[0].image.link", is(expectedStep.getImage().getLink())))
+                .andExpect(jsonPath("$[0].steps[0].image.originalName", is(expectedStep.getImage().getOriginalName())))
                 .andExpect(jsonPath("$[0].created", is(recipe.getCreated().toString())))
                 .andExpect(jsonPath("$[0].ingredients", hasSize(3)))
-                .andExpect(jsonPath("$[0].ingredients[0].id", is(recipe.getIngredients().get(0).getId())))
-                .andExpect(jsonPath("$[0].ingredients[0].name", is(recipe.getIngredients().get(0).getName())))
-                .andExpect(jsonPath("$[0].ingredients[0].value", is(recipe.getIngredients().get(0).getValue().toString())))
-                .andExpect(jsonPath("$[0].ingredients[0].unit", is(recipe.getIngredients().get(0).getUnit())))
+                .andExpect(jsonPath("$[0].ingredients[0].id", is(expectedIngredient.getId())))
+                .andExpect(jsonPath("$[0].ingredients[0].name", is(expectedIngredient.getName())))
+                .andExpect(jsonPath("$[0].ingredients[0].value", is(expectedIngredient.getValue().toString())))
+                .andExpect(jsonPath("$[0].ingredients[0].unit", is(expectedIngredient.getUnit())))
                 .andExpect(jsonPath("$[0].link", is(recipe.getLink())))
                 .andExpect(jsonPath("$[0].created", is(recipe.getCreated().toString())))
-                .andExpect(jsonPath("$[0].input", is(recipe.getTitle())))
+                .andExpect(jsonPath("$[0].title", is(recipe.getTitle())))
                 .andExpect(jsonPath("$[0].id", is(recipe.getId())));
 
 
-        verify(service, times(1)).getAll();
+        verify(service, times(1)).getAll(any());
     }
 
     @Test

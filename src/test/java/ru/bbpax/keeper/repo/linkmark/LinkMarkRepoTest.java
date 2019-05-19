@@ -88,7 +88,7 @@ class LinkMarkRepoTest {
     }
 
     @Test
-    void testFindAll(@Autowired MongoTemplate template) throws Exception {
+    void testFindAll() throws Exception {
         final List<LinkMark> all = repo.findAll();
         assertEquals(linkMarks.size(), all.size());
         assertEquals(linkMarks, all);

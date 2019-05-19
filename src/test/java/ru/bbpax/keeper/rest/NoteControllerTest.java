@@ -9,17 +9,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import ru.bbpax.keeper.service.NoteService;
 import ru.bbpax.keeper.rest.dto.NoteDto;
+import ru.bbpax.keeper.service.NoteService;
 
 import java.util.Collections;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,9 +39,10 @@ import static ru.bbpax.keeper.util.EntityUtil.noteDto;
  */
 @ExtendWith(SpringExtension.class)
 @WebMvcTest
+@WithMockUser
 class NoteControllerTest {
     @Configuration
-    @Import({ NoteController.class })
+    @Import({ NoteController.class, MockMvcSecurityConfig.class })
     static class Config {
     }
 
@@ -87,7 +90,6 @@ class NoteControllerTest {
         when(service.getById(note.getId()))
                 .thenReturn(note);
 
-        ObjectMapper mapper = new ObjectMapper();
         mvc.perform(get("/api/v1/notes/" + note.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -95,7 +97,7 @@ class NoteControllerTest {
                 .andExpect(jsonPath("$.description", is(note.getDescription())))
                 .andExpect(jsonPath("$.tags", hasSize(3)))
                 .andExpect(jsonPath("$.created", is(note.getCreated().toString())))
-                .andExpect(jsonPath("$.input", is(note.getTitle())))
+                .andExpect(jsonPath("$.title", is(note.getTitle())))
                 .andExpect(jsonPath("$.id", is(note.getId())));
 
         verify(service, times(1)).getById(note.getId());
@@ -104,10 +106,9 @@ class NoteControllerTest {
     @Test
     void getNotes() throws Exception {
         NoteDto note = noteDto();
-        when(service.getAll())
+        when(service.getAll(any()))
                 .thenReturn(Collections.singletonList(note));
 
-        ObjectMapper mapper = new ObjectMapper();
         mvc.perform(get("/api/v1/notes/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -116,11 +117,11 @@ class NoteControllerTest {
                 .andExpect(jsonPath("$[0].description", is(note.getDescription())))
                 .andExpect(jsonPath("$[0].tags", hasSize(3)))
                 .andExpect(jsonPath("$[0].created", is(note.getCreated().toString())))
-                .andExpect(jsonPath("$[0].input", is(note.getTitle())))
+                .andExpect(jsonPath("$[0].title", is(note.getTitle())))
                 .andExpect(jsonPath("$[0].id", is(note.getId())));
 
 
-        verify(service, times(1)).getAll();
+        verify(service, times(1)).getAll(any());
     }
 
     @Test

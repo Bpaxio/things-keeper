@@ -3,6 +3,7 @@ package ru.bbpax.keeper.service;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ru.bbpax.keeper.filter.core.DateIntervalFilter;
@@ -23,6 +24,7 @@ import static ru.bbpax.keeper.model.QNote.note;
 import static ru.bbpax.keeper.model.QRecipe.recipe;
 import static ru.bbpax.keeper.util.Helper.isBlank;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class FilterService {
@@ -39,15 +41,7 @@ public class FilterService {
             builder.and(stringExpression.getValue());
         }
 
-        Filter intervalFilter = new DateIntervalFilter(request.getFrom(), request.getTo());
-        if (intervalFilter.isValid()) {
-            builder.and(intervalFilter.toPredicate());
-        }
-
-        TagFilter tagFilter = new TagFilter(findTagForFilter(request));
-        if (tagFilter.isValid()) {
-            builder.and(tagFilter.toPredicate());
-        }
+        configureFilters(builder, request);
 
         return builder.getValue();
     }
@@ -65,16 +59,7 @@ public class FilterService {
             }
             builder.and(stringExpression.getValue());
         }
-
-        Filter intervalFilter = new DateIntervalFilter(request.getFrom(), request.getTo());
-        if (intervalFilter.isValid()) {
-            builder.and(intervalFilter.toPredicate());
-        }
-
-        TagFilter tagFilter = new TagFilter(findTagForFilter(request));
-        if (tagFilter.isValid()) {
-            builder.and(tagFilter.toPredicate());
-        }
+        configureFilters(builder, request);
 
         return builder.getValue();
     }
@@ -93,21 +78,26 @@ public class FilterService {
             builder.and(stringExpression.getValue());
         }
 
-        Filter intervalFilter = new DateIntervalFilter(request.getFrom(), request.getTo());
-        if (intervalFilter.isValid()) {
-            builder.and(intervalFilter.toPredicate());
-        }
-
-        TagFilter tagFilter = new TagFilter(findTagForFilter(request));
-        if (tagFilter.isValid()) {
-            builder.and(tagFilter.toPredicate());
-        }
+        configureFilters(builder, request);
 
         if (!isBlank(request.getCategory())) {
             builder.and(recipe.category.containsIgnoreCase(request.getCategory()));
         }
 
         return builder.getValue();
+    }
+
+    private <T extends BaseFilterRequest> void configureFilters(BooleanBuilder builder, T request) {
+        Filter intervalFilter = new DateIntervalFilter(request.getFrom(), request.getTo());
+        if (intervalFilter.isValid()) {
+            builder.and(intervalFilter.toPredicate());
+        }
+        final Tag tag = findTagForFilter(request);
+        log.info("found tag: {} for filter");
+        TagFilter tagFilter = new TagFilter(tag);
+        if (tagFilter.isValid()) {
+            builder.and(tagFilter.toPredicate());
+        }
     }
 
     private <T extends BaseFilterRequest> Tag findTagForFilter(T filterRequest) {

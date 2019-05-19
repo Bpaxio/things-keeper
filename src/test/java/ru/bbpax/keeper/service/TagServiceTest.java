@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.bbpax.keeper.model.Tag;
 import ru.bbpax.keeper.repo.tag.TagRepo;
+import ru.bbpax.keeper.security.service.PrivilegeService;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 import ru.bbpax.keeper.service.exception.TagIsUsedException;
 
@@ -31,6 +32,7 @@ import static ru.bbpax.keeper.util.EntityUtil.tag;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 class TagServiceTest {
+
     @Configuration
     @Import({ TagService.class })
     static class Config {
@@ -38,6 +40,8 @@ class TagServiceTest {
     }
     @MockBean
     private TagRepo repo;
+    @MockBean
+    private PrivilegeService privilegeService;
 
     @Autowired
     private TagService service;
@@ -156,5 +160,21 @@ class TagServiceTest {
         verify(repo, times(1)).findById(usedTag.getId());
         verify(repo, times(1)).deleteById(unusedTag.getId());
         verify(repo, times(0)).deleteById(usedTag.getId());
+    }
+
+    @Test
+    void getAllByValue() {
+        final List<Tag> first = Arrays.asList(tag("first"),
+                tag("first1"),
+                tag("firstsafv"),
+                tag("gbfirst"),
+                tag("firstdfsb"),
+                tag("sfgb_first"),
+                tag("first gsb"),
+                tag("dfb first")
+        );
+        doReturn(first).when(repo).findAllByValue("first");
+
+        assertEquals(first, service.getAllByValue("first"));
     }
 }

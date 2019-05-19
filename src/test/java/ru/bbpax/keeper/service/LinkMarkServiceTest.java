@@ -7,7 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -36,12 +35,8 @@ import static ru.bbpax.keeper.util.EntityUtil.linkMarkDto;
 @ExtendWith(SpringExtension.class)
 class LinkMarkServiceTest {
     @Configuration
-    @Import({ LinkMarkService.class })
+    @Import({ LinkMarkService.class, CommonConfiguration.class })
     static class Config {
-        @Bean
-        public ModelMapper mapper() {
-            return new ModelMapper();
-        }
     }
     @MockBean
     private LinkMarkRepo repo;

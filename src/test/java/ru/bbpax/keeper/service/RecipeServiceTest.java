@@ -1,19 +1,20 @@
 package ru.bbpax.keeper.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.bbpax.keeper.model.Recipe;
 import ru.bbpax.keeper.repo.recipe.RecipeRepo;
 import ru.bbpax.keeper.rest.dto.RecipeDto;
+import ru.bbpax.keeper.service.client.FilesClient;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 
 import java.util.Arrays;
@@ -35,18 +36,17 @@ import static ru.bbpax.keeper.util.EntityUtil.recipeDto;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 class RecipeServiceTest {
+
     @Configuration
-    @Import({ RecipeService.class })
+    @Import({ RecipeService.class, CommonConfiguration.class })
     static class Config {
-        @Bean
-        public ModelMapper mapper() {
-            return new ModelMapper();
-        }
     }
     @MockBean
     private RecipeRepo repo;
     @MockBean
     private TagService tagService;
+    @MockBean
+    private FilesClient client;
 
     @Autowired
     private RecipeService service;
@@ -126,5 +126,10 @@ class RecipeServiceTest {
     void deleteById() {
         service.deleteById("ID");
         verify(repo, times(1)).deleteById("ID");
+    }
+
+    @Test
+    @Disabled
+    void uploadFile() {
     }
 }
