@@ -123,11 +123,6 @@ class RecipeServiceTest {
     }
 
     @Test
-    @Disabled
-    void getAllWithFilter() {
-    }
-
-    @Test
     void deleteById() {
         service.deleteById("ID");
         verify(repo, times(1)).deleteById("ID");

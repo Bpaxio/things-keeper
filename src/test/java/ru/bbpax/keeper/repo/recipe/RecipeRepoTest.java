@@ -89,7 +89,7 @@ class RecipeRepoTest {
     }
 
     @Test
-    void testFindAll(@Autowired MongoTemplate template) throws Exception {
+    void testFindAll() throws Exception {
         final List<Recipe> all = repo.findAll();
         assertEquals(recipes.size(), all.size());
         assertEquals(recipes, all);

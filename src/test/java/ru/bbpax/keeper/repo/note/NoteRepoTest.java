@@ -78,7 +78,7 @@ class NoteRepoTest {
     }
 
     @Test
-    void testFindAll(@Autowired MongoTemplate template) {
+    void testFindAll() {
         final List<Note> all = repo.findAll();
         assertEquals(notes.size(), all.size());
         assertEquals(notes, all);
