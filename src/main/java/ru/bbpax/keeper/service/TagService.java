@@ -25,12 +25,12 @@ public class TagService {
 
     public Tag create(Tag tag) {
         final Tag newTag = repo.save(tag);
-        privilegeService.
-                addPrivilege(newTag.getId(), OWN);
+        privilegeService
+                .addPrivilege(newTag.getId(), OWN);
         return newTag;
     }
 
-    @PreAuthorize("hasWritePrivilege(#dto.id)")
+    @PreAuthorize("hasWritePrivilege(#tag.id)")
     public Tag update(Tag tag) {
         return repo.save(tag);
     }
@@ -64,6 +64,7 @@ public class TagService {
     public List<Tag> updateTags(List<Tag> tags) {
         return tags.stream()
                 .map(this::createIfMissing)
+                .distinct()
                 .collect(Collectors.toList());
     }
 

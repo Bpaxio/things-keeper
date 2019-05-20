@@ -3,7 +3,6 @@ package ru.bbpax.keeper.security.model;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.MultiValueMap;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -79,5 +78,12 @@ public class CustomUserPrincipal implements UserDetails {
         }
         log.info("user updated in memory: {}", user);
 
+    }
+
+    @Override
+    public String toString() {
+        return "CustomUserPrincipal{" +
+                "user=" + user +
+                '}';
     }
 }
