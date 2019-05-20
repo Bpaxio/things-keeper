@@ -32,8 +32,8 @@ public class FilesClientImpl implements FilesClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public FilesClientImpl(@Value("${filer.host}") String host,
-                           @Value("${filer.port}") String port) {
+    public FilesClientImpl(@Value("${file-service.host}") String host,
+                           @Value("${file-service.port}") String port) {
         this.url = host + ":" + port + "/files/";
     }
 
