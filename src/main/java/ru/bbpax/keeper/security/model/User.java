@@ -6,8 +6,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,5 +41,42 @@ public class User {
         this.credentialsNonExpired = true;
         this.authorities = Collections.emptySet();
         this.privileges = new HashMap<>();
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.toString()).append(": ");
+        sb.append("Username: ").append(this.username).append("; ");
+        sb.append("Password: [PROTECTED]; ");
+        sb.append("Enabled: ").append(this.enabled).append("; ");
+        sb.append("AccountNonExpired: ").append(this.accountNonExpired).append("; ");
+        sb.append("credentialsNonExpired: ").append(this.credentialsNonExpired)
+                .append("; ");
+        sb.append("AccountNonLocked: ").append(this.accountNonLocked).append("; ");
+
+        if (!authorities.isEmpty()) {
+            sb.append("Granted Authorities: ");
+
+            boolean first = true;
+            for (GrantedAuthority auth : authorities) {
+                if (!first) {
+                    sb.append(",");
+                }
+                first = false;
+
+                sb.append(auth);
+            }
+        } else {
+            sb.append("Not granted any authorities");
+        }
+        if (privileges != null && !privileges.isEmpty()) {
+            sb.append("Granted Privileges: ");
+            privileges.forEach((key, value) -> sb.append(key).append(" - ").append(value));
+
+        } else {
+            sb.append("Not granted any privileges");
+        }
+
+        return sb.toString();
     }
 }
