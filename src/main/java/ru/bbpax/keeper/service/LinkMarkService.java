@@ -1,5 +1,6 @@
 package ru.bbpax.keeper.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -33,6 +34,7 @@ public class LinkMarkService {
     private final PrivilegeService privilegeService;
 
     @Transactional
+    @HystrixCommand(groupKey = "linkMarkService", commandKey = "createLinkMark")
     public LinkMarkDto create(LinkMarkDto dto) {
         dto.setId(null);
         LinkMark linkMark = mapper.map(dto, LinkMark.class);
@@ -48,6 +50,7 @@ public class LinkMarkService {
 
     @Transactional
     @PreAuthorize("hasWritePrivilege(#dto.id)")
+    @HystrixCommand(groupKey = "linkMarkService", commandKey = "updateLinkMark")
     public LinkMarkDto update(LinkMarkDto dto) {
         LinkMark linkMark = mapper.map(dto, LinkMark.class);
         linkMark.setTags(tagService.updateTags(linkMark.getTags()));
@@ -55,6 +58,7 @@ public class LinkMarkService {
     }
 
     @PreAuthorize("hasReadPrivilege(#id)")
+    @HystrixCommand(groupKey = "linkMarkService", commandKey = "getLinkMarkById")
     public LinkMarkDto getById(String id) {
         return repo.findById(id)
                 .map(linkMark -> mapper.map(linkMark, LinkMarkDto.class))
@@ -62,6 +66,7 @@ public class LinkMarkService {
     }
 
     @PostFilter("hasReadPrivilege(filterObject.id)")
+    @HystrixCommand(groupKey = "linkMarkService", commandKey = "getAllLinkMark")
     public List<LinkMarkDto> getAll() {
         return repo.findAll()
                 .stream()
@@ -70,6 +75,7 @@ public class LinkMarkService {
     }
 
     @PostFilter("hasReadPrivilege(filterObject.id)")
+    @HystrixCommand(groupKey = "linkMarkService", commandKey = "getAllFilteredLinkMark")
     public List<LinkMarkDto> getAll(LinkMarkFilterRequest request) {
         log.info("filterDTO: {}", request);
         return repo.findAll(filterService.makePredicate(request))
@@ -80,6 +86,7 @@ public class LinkMarkService {
 
     @Transactional
     @PreAuthorize("hasDeletePrivilege(#id)")
+    @HystrixCommand(groupKey = "linkMarkService", commandKey = "deleteLinkMarkById")
     public void deleteById(String id) {
         repo.deleteById(id);
     }

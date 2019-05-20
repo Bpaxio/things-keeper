@@ -1,5 +1,6 @@
 package ru.bbpax.keeper.security.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,7 @@ public class UserAuthService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
 
+    @HystrixCommand(groupKey = "userAuthService", commandKey = "register")
     public AuthResponse register(AuthRequest auth) {
         String username = auth.getUsername();
         String password = auth.getPassword();
@@ -56,6 +58,7 @@ public class UserAuthService {
         return login(auth);
     }
 
+    @HystrixCommand(groupKey = "userAuthService", commandKey = "login")
     public AuthResponse login(AuthRequest auth) {
         String username = auth.getUsername();
         try {

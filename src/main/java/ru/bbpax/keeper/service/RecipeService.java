@@ -1,5 +1,6 @@
 package ru.bbpax.keeper.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -40,6 +41,7 @@ public class RecipeService {
     private final PrivilegeService privilegeService;
 
     @Transactional
+    @HystrixCommand(groupKey = "recipeService", commandKey = "createRecipe")
     public RecipeDto create(RecipeDto dto) {
         dto.setId(null);
         final Recipe recipe = mapper.map(dto, Recipe.class);
@@ -55,6 +57,7 @@ public class RecipeService {
 
     @Transactional
     @PreAuthorize("hasWritePrivilege(#dto.id)")
+    @HystrixCommand(groupKey = "recipeService", commandKey = "updateRecipe")
     public RecipeDto update(RecipeDto dto) {
         final Recipe recipe = mapper.map(dto, Recipe.class);
         log.info("recipe: {}", recipe);
@@ -65,6 +68,7 @@ public class RecipeService {
     }
 
     @PreAuthorize("hasReadPrivilege(#id)")
+    @HystrixCommand(groupKey = "recipeService", commandKey = "getRecipeById")
     public RecipeDto getById(String id) {
         return repo.findById(id)
                 .map(recipe -> mapper.map(recipe, RecipeDto.class))
@@ -72,6 +76,7 @@ public class RecipeService {
     }
 
     @PostFilter("hasReadPrivilege(filterObject.id)")
+    @HystrixCommand(groupKey = "recipeService", commandKey = "getAllRecipe")
     public List<RecipeDto> getAll() {
         return repo.findAll()
                 .stream()
@@ -80,6 +85,7 @@ public class RecipeService {
     }
 
     @PostFilter("hasReadPrivilege(filterObject.id)")
+    @HystrixCommand(groupKey = "recipeService", commandKey = "getAllFilteredRecipe")
     public List<RecipeDto> getAll(RecipeFilterRequest request) {
         log.info("filterDTO: {}", request);
         return repo.findAll(filterService.makePredicate(request))
@@ -90,6 +96,7 @@ public class RecipeService {
 
     @Transactional
     @PreAuthorize("hasDeletePrivilege(#id)")
+    @HystrixCommand(groupKey = "recipeService", commandKey = "deleteRecipeById")
     public void deleteById(String id) {
         repo.findById(id).ifPresent(recipe -> {
             if (recipe.getImage() != null && recipe.getImage().getLink() != null) {
@@ -105,6 +112,7 @@ public class RecipeService {
 
     @Transactional
     @PreAuthorize("hasWritePrivilege(#id)")
+    @HystrixCommand(groupKey = "recipeService", commandKey = "uploadFile")
     public ImageDto uploadFile(String id, String imageId, MultipartFile file) {
         final Recipe recipe = repo.findById(id)
                 .orElseThrow(() -> new NotFoundException(RECIPE, id));
