@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -37,8 +38,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:4200")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
-                .allowedHeaders("Content-Type", "Accept", "Total-Count", "loginInfo")
-                .exposedHeaders("Content-Type", "Date", "Total-Count", "loginInfo")
-                .maxAge(3600);
+                .allowedHeaders(
+                        HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION,
+                        HttpHeaders.ACCEPT, HttpHeaders.USER_AGENT, HttpHeaders.CONTENT_DISPOSITION
+                ).maxAge(3600);
     }
 }
