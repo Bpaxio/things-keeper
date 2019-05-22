@@ -1,6 +1,5 @@
 package ru.bbpax.keeper.configurarion;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -27,13 +26,19 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
+                .pathMapping("/")
+                .forCodeGeneration(true)
                 .securityContexts(Collections.singletonList(securityContext()))
                 .securitySchemes(Collections
-                        .singletonList(new ApiKey("TOKEN", HttpHeaders.AUTHORIZATION, "header")))
+                        .singletonList(apiKey()))
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build();
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("JWT", HttpHeaders.AUTHORIZATION, "header");
     }
 
     private SecurityContext securityContext() {
@@ -47,7 +52,7 @@ public class SwaggerConfig {
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = new AuthorizationScope("global", "accessEverything");
         return Collections.singletonList(
-                new SecurityReference("TOKEN", authorizationScopes));
+                new SecurityReference("JWT", authorizationScopes));
     }
 
     private ApiInfo apiInfo() {

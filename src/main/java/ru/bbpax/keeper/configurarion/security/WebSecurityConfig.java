@@ -36,7 +36,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/");
+        web.ignoring()
+                .antMatchers(
+                        "/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**"
+        );
     }
 
     @Override
@@ -47,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
+                        .antMatchers(HttpMethod.OPTIONS).permitAll()
                         .antMatchers(HttpMethod.POST,"/auth/login", "/auth/register").permitAll()
                         .antMatchers("/api/**").authenticated()
                 .and()
