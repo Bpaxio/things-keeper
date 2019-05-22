@@ -62,6 +62,8 @@ public class TagService {
 
     @PreFilter("hasReadPrivilege(filterObject.id)")
     public List<Tag> updateTags(List<Tag> tags) {
+        if (tags == null)
+            return null;
         return tags.stream()
                 .map(this::createIfMissing)
                 .distinct()

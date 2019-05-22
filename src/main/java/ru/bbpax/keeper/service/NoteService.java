@@ -5,14 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bbpax.keeper.model.Note;
 import ru.bbpax.keeper.repo.note.NoteRepo;
 import ru.bbpax.keeper.rest.dto.NoteDto;
 import ru.bbpax.keeper.rest.request.NoteFilterRequest;
-import ru.bbpax.keeper.security.model.CustomUserPrincipal;
 import ru.bbpax.keeper.security.service.PrivilegeService;
 import ru.bbpax.keeper.service.exception.NotFoundException;
 
@@ -20,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.bbpax.keeper.model.NoteTypes.NOTE;
-import static ru.bbpax.keeper.security.SecurityUtil.addPrivilege;
 import static ru.bbpax.keeper.security.model.AccessLevels.OWN;
 
 @Slf4j

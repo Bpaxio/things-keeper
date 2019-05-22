@@ -12,9 +12,6 @@ public class GlobalMethodSecurityConfig extends GlobalMethodSecurityConfiguratio
 
     @Override
     protected MethodSecurityExpressionHandler createExpressionHandler() {
-        NotesExpressionHandler expressionHandler = new NotesExpressionHandler();
-
-//        expressionHandler.setPermissionEvaluator(new NotesPermissionEvaluator());
-        return expressionHandler;
+        return new NotesExpressionHandler();
     }
 }
