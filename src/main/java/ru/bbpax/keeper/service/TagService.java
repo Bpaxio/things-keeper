@@ -1,5 +1,6 @@
 package ru.bbpax.keeper.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,7 @@ public class TagService {
     private final TagRepo repo;
     private final PrivilegeService privilegeService;
 
+    @HystrixCommand(groupKey = "tagService", commandKey = "createTag")
     public Tag create(Tag tag) {
         final Tag newTag = repo.save(tag);
         privilegeService
@@ -31,27 +33,32 @@ public class TagService {
     }
 
     @PreAuthorize("hasWritePrivilege(#tag.id)")
+    @HystrixCommand(groupKey = "tagService", commandKey = "updateTag")
     public Tag update(Tag tag) {
         return repo.save(tag);
     }
 
     @PreAuthorize("hasReadPrivilege(#id)")
+    @HystrixCommand(groupKey = "tagService", commandKey = "getTagById")
     public Tag getById(String id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Tag", id));
     }
 
     @PostFilter("hasReadPrivilege(filterObject.id)")
-    public List<Tag> getAllByValue(String name) {
-        return repo.findAllByValue(name);
+    @HystrixCommand(groupKey = "tagService", commandKey = "getAllTagByValue")
+    public List<Tag> getAllByValue(String value) {
+        return repo.findAllByValue(value);
     }
 
     @PostFilter("hasReadPrivilege(filterObject.id)")
+    @HystrixCommand(groupKey = "tagService", commandKey = "getAllTag")
     public List<Tag> getAll() {
         return repo.findAll();
     }
 
     @PreAuthorize("hasDeletePrivilege(#id)")
+    @HystrixCommand(groupKey = "tagService", commandKey = "deleteTagById")
     public void deleteById(String id) {
         Tag tag = repo.findById(id).orElseThrow(() -> new NotFoundException("Tag", id));
         if (repo.tagIsUsed(tag)) {

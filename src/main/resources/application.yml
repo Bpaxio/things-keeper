@@ -18,3 +18,13 @@ server:
 filer:
   host: http://localhost
   port: 8088
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+hystrix:
+  shareSecurityContext: true
