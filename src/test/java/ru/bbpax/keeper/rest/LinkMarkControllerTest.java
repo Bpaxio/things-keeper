@@ -54,12 +54,12 @@ class LinkMarkControllerTest {
     @Test
     void createLinkMark() throws Exception {
         LinkMarkDto linkMark = linkMarkDto();
-        mvc.perform(post("/api/v1/linkmarks/")
+        mvc.perform(post("/linkmarks/")
                 .content(linkMark.getDescription())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mvc.perform(post("/api/v1/linkmarks/")
+        mvc.perform(post("/linkmarks/")
                 .content(new ObjectMapper().writeValueAsString(linkMark))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -71,11 +71,11 @@ class LinkMarkControllerTest {
     void updateLinkMark() throws Exception {
         LinkMarkDto linkMark = linkMarkDto();
 
-        mvc.perform(put("/api/v1/linkmarks/" + linkMark.getId())
+        mvc.perform(put("/linkmarks/" + linkMark.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isMethodNotAllowed());
 
-        MvcResult mvcResult = mvc.perform(put("/api/v1/linkmarks/")
+        MvcResult mvcResult = mvc.perform(put("/linkmarks/")
                 .content(new ObjectMapper().writeValueAsString(linkMark))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -90,7 +90,7 @@ class LinkMarkControllerTest {
         when(service.getById(linkMark.getId()))
                 .thenReturn(linkMark);
 
-        mvc.perform(get("/api/v1/linkmarks/" + linkMark.getId())
+        mvc.perform(get("/linkmarks/" + linkMark.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(linkMark.getId())))
@@ -110,7 +110,7 @@ class LinkMarkControllerTest {
         when(service.getAll(any()))
                 .thenReturn(Collections.singletonList(linkMark));
 
-        mvc.perform(get("/api/v1/linkmarks/")
+        mvc.perform(get("/linkmarks/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -129,11 +129,11 @@ class LinkMarkControllerTest {
     @Test
     void deleteLinkMarkById() throws Exception {
         LinkMarkDto linkMark = linkMarkDto();
-        mvc.perform(delete("/api/v1/linkmarks/")
+        mvc.perform(delete("/linkmarks/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isMethodNotAllowed());
 
-        mvc.perform(delete("/api/v1/linkmarks/" + linkMark.getId())
+        mvc.perform(delete("/linkmarks/" + linkMark.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

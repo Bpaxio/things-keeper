@@ -27,7 +27,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/recipes")
+@RequestMapping("recipes")
 @AllArgsConstructor
 @Api(value="RecipesRest", description = "Recipe REST API")
 public class RecipeController {

@@ -21,7 +21,7 @@ import ru.bbpax.keeper.rest.dto.LinkMarkDto;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/linkmarks")
+@RequestMapping("linkmarks")
 @AllArgsConstructor
 @Api(value="LinkMarksRest", description = "LinkMark REST API")
 public class LinkMarkController {

@@ -1,8 +1,13 @@
 spring:
+  cloud:
+    config:
+      enabled: false
+      discovery:
+        enabled: false
   data:
     mongodb:
       database: test-keeper
-      port: 27017
+      port: 0
       host: localhost
 logging:
   level:

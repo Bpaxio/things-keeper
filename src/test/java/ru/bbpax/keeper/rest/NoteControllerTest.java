@@ -54,12 +54,12 @@ class NoteControllerTest {
     @Test
     void createNote() throws Exception {
         NoteDto note = noteDto();
-        mvc.perform(post("/api/v1/notes/")
+        mvc.perform(post("/notes/")
                 .content(note.getDescription())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mvc.perform(post("/api/v1/notes/")
+        mvc.perform(post("/notes/")
                 .content(new ObjectMapper().writeValueAsString(note))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -71,11 +71,11 @@ class NoteControllerTest {
     void updateNote() throws Exception {
         NoteDto note = noteDto();
 
-        mvc.perform(put("/api/v1/notes/" + note.getId())
+        mvc.perform(put("/notes/" + note.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isMethodNotAllowed());
 
-        MvcResult mvcResult = mvc.perform(put("/api/v1/notes/")
+        MvcResult mvcResult = mvc.perform(put("/notes/")
                 .content(new ObjectMapper().writeValueAsString(note))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -90,7 +90,7 @@ class NoteControllerTest {
         when(service.getById(note.getId()))
                 .thenReturn(note);
 
-        mvc.perform(get("/api/v1/notes/" + note.getId())
+        mvc.perform(get("/notes/" + note.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(note.getId())))
@@ -109,7 +109,7 @@ class NoteControllerTest {
         when(service.getAll(any()))
                 .thenReturn(Collections.singletonList(note));
 
-        mvc.perform(get("/api/v1/notes/")
+        mvc.perform(get("/notes/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -127,11 +127,11 @@ class NoteControllerTest {
     @Test
     void deleteNoteById() throws Exception {
         NoteDto note = noteDto();
-        mvc.perform(delete("/api/v1/notes/")
+        mvc.perform(delete("/notes/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isMethodNotAllowed());
 
-        mvc.perform(delete("/api/v1/notes/" + note.getId())
+        mvc.perform(delete("/notes/" + note.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

@@ -20,7 +20,7 @@ import ru.bbpax.keeper.service.TagService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/tags")
+@RequestMapping("tags")
 @AllArgsConstructor
 @Api(value="TagsRest", description = "Tag REST API")
 public class TagController {

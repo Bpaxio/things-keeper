@@ -23,7 +23,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/notes")
+@RequestMapping("notes")
 @AllArgsConstructor
 @Api(value = "NotesRest", description = "Note REST API")
 public class NoteController {
