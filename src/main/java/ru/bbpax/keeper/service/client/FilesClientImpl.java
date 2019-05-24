@@ -22,7 +22,6 @@ import ru.bbpax.keeper.service.exception.FileServiceIsNotAvailable;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.nio.file.Paths;
 
 import static ru.bbpax.keeper.util.Helper.getFileExtention;
@@ -31,12 +30,14 @@ import static ru.bbpax.keeper.util.Helper.getFileExtention;
 @Component
 public class FilesClientImpl implements FilesClient {
     private final String url;
+    private final String baseUrl;
 
     @Autowired
     private RestTemplate restTemplate;
 
-    public FilesClientImpl(@Value("${filer.url}") String url) {
+    public FilesClientImpl(@Value("${filer.url}") String url, @Value("${filer.base-url}")String baseUrl) {
         this.url = url;
+        this.baseUrl = baseUrl;
     }
 
     @Override
@@ -83,7 +84,7 @@ public class FilesClientImpl implements FilesClient {
 
         log.info("result: {} - {}", exchange.getStatusCode(), exchange.getBody());
         if (exchange.getBody() == null) throw new SaveFileException(exchange.getStatusCode(), exchange.getStatusCodeValue());
-        return this.url + exchange.getBody().getPath();
+        return this.baseUrl + exchange.getBody().getPath();
         } catch (HttpClientErrorException e) {
             throw new FileServiceIsNotAvailable(e);
         }
