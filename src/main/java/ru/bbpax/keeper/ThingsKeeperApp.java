@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication
 @EnableMongoRepositories
 public class ThingsKeeperApp {
-    // TODO: 23.05.2019 fix tests!
     public static void main(String[] args) {
         SpringApplication.run(ThingsKeeperApp.class);
     }

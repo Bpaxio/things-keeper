@@ -2,6 +2,8 @@ package ru.bbpax.keeper.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.AuthorizationScope;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,35 +36,65 @@ public class RecipeController {
     private final RecipeService service;
 
     @PostMapping
-    @ApiOperation("create")
+    @ApiOperation(value = "create",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public RecipeDto create(@RequestBody RecipeDto dto) {
         log.info("create request: {}", dto);
         return service.create(dto);
     }
 
     @PutMapping
-    @ApiOperation("update")
+    @ApiOperation(value = "update",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public RecipeDto update(@RequestBody RecipeDto dto) {
         return service.update(dto);
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    @ApiOperation("get")
+    @ApiOperation(value = "get",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public RecipeDto get(@PathVariable String id) {
         return service.getById(id);
     }
 
     @GetMapping
     @ResponseBody
-    @ApiOperation("getAll")
+    @ApiOperation(value = "getAll",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public List<RecipeDto> getAll(RecipeFilterRequest request) {
         return service.getAll(request);
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation("deleteById")
+    @ApiOperation(value = "deleteById",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public void deleteById(@PathVariable String id) {
         service.deleteById(id);
     }
@@ -70,7 +102,13 @@ public class RecipeController {
     @PostMapping(value = "{id}/{imageId}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ApiOperation("addImageToRecipe")
+    @ApiOperation(value = "addImageToRecipe",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public ImageDto loadImage(@PathVariable("id") String noteId,
                               @PathVariable("imageId") String imageId,
                               @RequestPart("file") MultipartFile file) {

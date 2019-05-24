@@ -37,7 +37,8 @@ public class NoteService {
         final Note note = mapper.map(dto, Note.class);
         note.setId(null);
         log.info("create: {}", note);
-        note.setTags(tagService.updateTags(note.getTags()));
+        if (note.getTags() != null)
+            note.setTags(tagService.updateTags(note.getTags()));
         final NoteDto noteDto = mapper.map(repo.save(note), NoteDto.class);
 
         privilegeService.
@@ -51,7 +52,8 @@ public class NoteService {
     @PreAuthorize("hasWritePrivilege(#dto.id)")
     public NoteDto update(final NoteDto dto) {
         Note note = mapper.map(dto, Note.class);
-        note.setTags(tagService.updateTags(note.getTags()));
+        if (note.getTags() != null)
+            note.setTags(tagService.updateTags(note.getTags()));
         return mapper.map(repo.save(note), NoteDto.class);
     }
 

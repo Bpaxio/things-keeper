@@ -2,6 +2,8 @@ package ru.bbpax.keeper.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.AuthorizationScope;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,34 +29,64 @@ public class TagController {
     private final TagService service;
 
     @PostMapping
-    @ApiOperation("create")
+    @ApiOperation(value = "create",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public Tag createTag(@RequestBody Tag tag) {
         return service.create(tag);
     }
 
     @PutMapping
-    @ApiOperation("update")
+    @ApiOperation(value = "update",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public Tag updateTag(@RequestBody Tag tag) {
         return service.update(tag);
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    @ApiOperation("get")
+    @ApiOperation(value = "get",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public Tag getTag(@PathVariable String id) {
         return service.getById(id);
     }
 
     @GetMapping
     @ResponseBody
-    @ApiOperation("getAll")
+    @ApiOperation(value = "getAll",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public List<Tag> getTags() {
         return service.getAll();
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation("deleteById")
+    @ApiOperation(value = "deleteById",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public void deleteTagById(@PathVariable String id) {
         service.deleteById(id);
     }

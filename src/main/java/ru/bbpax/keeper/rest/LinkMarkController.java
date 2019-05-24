@@ -2,6 +2,8 @@ package ru.bbpax.keeper.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.AuthorizationScope;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,34 +30,64 @@ public class LinkMarkController {
     private final LinkMarkService service;
 
     @PostMapping
-    @ApiOperation("create")
+    @ApiOperation(value = "create",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public LinkMarkDto create(@RequestBody LinkMarkDto dto) {
         return service.create(dto);
     }
 
     @PutMapping
-    @ApiOperation("update")
+    @ApiOperation(value = "update",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public LinkMarkDto update(@RequestBody LinkMarkDto dto) {
         return service.update(dto);
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    @ApiOperation("get")
+    @ApiOperation(value = "get",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public LinkMarkDto get(@PathVariable String id) {
         return service.getById(id);
     }
 
     @GetMapping
     @ResponseBody
-    @ApiOperation("getAll")
+    @ApiOperation(value = "getAll",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public List<LinkMarkDto> getAll(LinkMarkFilterRequest request) {
         return service.getAll(request);
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation("deleteById")
+    @ApiOperation(value = "deleteById",
+            authorizations = {
+                    @Authorization(
+                            value = "JWT",
+                            scopes = @AuthorizationScope(scope = "global", description = "commonAccess")
+                    )
+            })
     public void deleteById(@PathVariable String id) {
         service.deleteById(id);
     }

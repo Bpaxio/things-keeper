@@ -37,7 +37,9 @@ public class LinkMarkService {
         dto.setId(null);
         LinkMark linkMark = mapper.map(dto, LinkMark.class);
         log.info("create: {}", linkMark);
-        linkMark.setTags(tagService.updateTags(linkMark.getTags()));
+
+        if (linkMark.getTags() != null)
+            linkMark.setTags(tagService.updateTags(linkMark.getTags()));
         final LinkMarkDto linkMarkDto = mapper.map(repo.save(linkMark), LinkMarkDto.class);
 
         privilegeService.
@@ -50,7 +52,9 @@ public class LinkMarkService {
     @PreAuthorize("hasWritePrivilege(#dto.id)")
     public LinkMarkDto update(LinkMarkDto dto) {
         LinkMark linkMark = mapper.map(dto, LinkMark.class);
-        linkMark.setTags(tagService.updateTags(linkMark.getTags()));
+
+        if (linkMark.getTags() != null)
+            linkMark.setTags(tagService.updateTags(linkMark.getTags()));
         return mapper.map(repo.save(linkMark), LinkMarkDto.class);
     }
 
