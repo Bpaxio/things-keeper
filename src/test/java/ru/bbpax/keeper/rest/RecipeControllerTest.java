@@ -58,12 +58,12 @@ class RecipeControllerTest {
     @Test
     void createRecipe() throws Exception {
         RecipeDto recipe = recipeDto();
-        mvc.perform(post("/api/v1/recipes/")
+        mvc.perform(post("/recipes/")
                 .content(recipe.getDescription())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mvc.perform(post("/api/v1/recipes/")
+        mvc.perform(post("/recipes/")
                 .content(new ObjectMapper().writeValueAsString(recipe))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -75,11 +75,11 @@ class RecipeControllerTest {
     void updateRecipe() throws Exception {
         RecipeDto recipe = recipeDto();
 
-        mvc.perform(put("/api/v1/recipes/" + recipe.getId())
+        mvc.perform(put("/recipes/" + recipe.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isMethodNotAllowed());
 
-        MvcResult mvcResult = mvc.perform(put("/api/v1/recipes/")
+        MvcResult mvcResult = mvc.perform(put("/recipes/")
                 .content(new ObjectMapper().writeValueAsString(recipe))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -95,7 +95,7 @@ class RecipeControllerTest {
                 .thenReturn(recipe);
         final StepDto expectedStep = recipe.getSteps().get(0);
         final IngredientDto expectedIngredient = recipe.getIngredients().get(0);
-        mvc.perform(get("/api/v1/recipes/" + recipe.getId())
+        mvc.perform(get("/recipes/" + recipe.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(recipe.getId())))
@@ -134,7 +134,7 @@ class RecipeControllerTest {
 
         final StepDto expectedStep = recipe.getSteps().get(0);
         final IngredientDto expectedIngredient = recipe.getIngredients().get(0);
-        mvc.perform(get("/api/v1/recipes/")
+        mvc.perform(get("/recipes/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -171,11 +171,11 @@ class RecipeControllerTest {
     @Test
     void deleteRecipeById() throws Exception {
         RecipeDto recipe = recipeDto();
-        mvc.perform(delete("/api/v1/recipes/")
+        mvc.perform(delete("/recipes/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isMethodNotAllowed());
 
-        mvc.perform(delete("/api/v1/recipes/" + recipe.getId())
+        mvc.perform(delete("/recipes/" + recipe.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

@@ -50,7 +50,7 @@ public class SwaggerConfig {
 
     private List<SecurityReference> defaultAuth() {
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = new AuthorizationScope("global", "accessEverything");
+        authorizationScopes[0] = new AuthorizationScope("global", "commonAccess");
         return Collections.singletonList(
                 new SecurityReference("JWT", authorizationScopes));
     }
@@ -59,10 +59,10 @@ public class SwaggerConfig {
         return new ApiInfo(
                 "Things Keeper",
                 "Will save your notes.",
-                "0.1.0",
+                "0.2.0",
                 "Terms of service url",
                 new Contact("Vlad Rakhlinskii", "www.not-ready.com", "vrahlinskiy@cinimex.ru"),
-                "Apache License 2.0", "https://github.com/Bpaxio/things-keeper/blob/master/LICENSE",
+                "Apache License 2.0", "https://github.com/Bpaxio/infrastructure-keeper/blob/master/LICENSE",
                 Collections.emptyList());
     }
 }

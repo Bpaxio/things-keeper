@@ -14,9 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ru.bbpax.keeper.service.client.exception.SaveFileException;
+import ru.bbpax.keeper.service.exception.FileServiceIsNotAvailable;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,13 +30,14 @@ import static ru.bbpax.keeper.util.Helper.getFileExtention;
 @Component
 public class FilesClientImpl implements FilesClient {
     private final String url;
+    private final String baseUrl;
 
     @Autowired
     private RestTemplate restTemplate;
 
-    public FilesClientImpl(@Value("${filer.host}") String host,
-                           @Value("${filer.port}") String port) {
-        this.url = host + ":" + port + "/files/";
+    public FilesClientImpl(@Value("${filer.url}") String url, @Value("${filer.base-url}")String baseUrl) {
+        this.url = url;
+        this.baseUrl = baseUrl;
     }
 
     @Override
@@ -75,12 +78,16 @@ public class FilesClientImpl implements FilesClient {
         HttpEntity<MultiValueMap<String, Object>> request =
                 new HttpEntity<>(createFileBody(file), setUpHeaders(file));
 
-        ResponseEntity<ImageResponse> exchange = restTemplate
-                .exchange(target, method, request, ImageResponse.class);// TODO: 2019-05-14 java.net.ConnectException
+        try {
+            ResponseEntity<ImageResponse> exchange = restTemplate
+                    .exchange(target, method, request, ImageResponse.class);
 
         log.info("result: {} - {}", exchange.getStatusCode(), exchange.getBody());
         if (exchange.getBody() == null) throw new SaveFileException(exchange.getStatusCode(), exchange.getStatusCodeValue());
-        return this.url + exchange.getBody().getPath();
+        return this.baseUrl + exchange.getBody().getPath();
+        } catch (HttpClientErrorException e) {
+            throw new FileServiceIsNotAvailable(e);
+        }
     }
 
     private HttpHeaders setUpHeaders(MultipartFile file) {

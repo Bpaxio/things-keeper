@@ -57,12 +57,12 @@ class TagControllerTest {
     @Test
     void createTag() throws Exception {
         Tag tag = tag();
-        mvc.perform(post("/api/v1/tags/")
+        mvc.perform(post("/tags/")
                 .content(tag.getValue())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mvc.perform(post("/api/v1/tags/")
+        mvc.perform(post("/tags/")
                 .content(new ObjectMapper().writeValueAsString(tag))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -74,11 +74,11 @@ class TagControllerTest {
     void updateTag() throws Exception {
         Tag tag = tag();
 
-        mvc.perform(put("/api/v1/tags/" + tag.getId())
+        mvc.perform(put("/tags/" + tag.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isMethodNotAllowed());
 
-        MvcResult mvcResult = mvc.perform(put("/api/v1/tags/")
+        MvcResult mvcResult = mvc.perform(put("/tags/")
                 .content(new ObjectMapper().writeValueAsString(tag))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -93,7 +93,7 @@ class TagControllerTest {
         when(service.getById(tag.getId()))
                 .thenReturn(tag);
 
-        mvc.perform(get("/api/v1/tags/" + tag.getId())
+        mvc.perform(get("/tags/" + tag.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(tag.getId())))
@@ -108,7 +108,7 @@ class TagControllerTest {
         when(service.getAll())
                 .thenReturn(Collections.singletonList(tag));
 
-        mvc.perform(get("/api/v1/tags/")
+        mvc.perform(get("/tags/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -122,11 +122,11 @@ class TagControllerTest {
     @Test
     void deleteTagById() throws Exception {
         Tag tag = tag();
-        mvc.perform(delete("/api/v1/tags/")
+        mvc.perform(delete("/tags/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isMethodNotAllowed());
 
-        mvc.perform(delete("/api/v1/tags/" + tag.getId())
+        mvc.perform(delete("/tags/" + tag.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

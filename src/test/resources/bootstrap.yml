@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: things-keeper
+  cloud:
+    config:
+      enabled: false
+      discovery:
+        enabled: false
